@@ -4,10 +4,10 @@ Standards and lifecycle agents live in `~/.agents` ([agent-lifecycle-kit](https:
 
 Before starting work, read:
 
-- `~/.agents/AGENTS.md` — bootstrap and lifecycle routing
-- `~/.agents/CODING_PHILOSOPHY.md` — hexagonal architecture, DDD, vertical slices, clean code
-- `~/.agents/SOPs/behavior-catalog-and-xfn.md` — tests as behavior catalog; XFN matrix
-- `~/.agents/skills/agent-adr/SKILL.md` — sparse ADRs in `docs/ADRs/`
+- `~/.agents/AGENTS.md`: bootstrap and lifecycle routing
+- `~/.agents/CODING_PHILOSOPHY.md`: hexagonal architecture, DDD, vertical slices, clean code
+- `~/.agents/SOPs/behavior-catalog-and-xfn.md`: tests as behavior catalog; XFN matrix
+- `~/.agents/skills/agent-adr/SKILL.md`: sparse ADRs in `docs/ADRs/`
 
 ## Toolchain
 
@@ -17,7 +17,7 @@ Before starting work, read:
 
 ## Project notes
 
-- App code and pnpm workspace live under `app/` — run `cd app && pnpm …`.
+- App code and pnpm workspace live under `app/`; run `cd app && pnpm …`.
 - Tailwind starter UI ships with CSS tokens in `app/src/index.css`; rebrand for your product.
 - Docs are Markdown under `docs/`, rendered in-app (not a separate docs framework).
 - Hosting is Cloudflare Pages via Pulumi + Wrangler (no R2/catalog).

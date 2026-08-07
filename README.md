@@ -1,10 +1,10 @@
 # React Cloudflare Template
 
-**From empty repo to a live Cloudflare Pages site — so day one is product work, not plumbing.**
+**From empty repo to a live Cloudflare Pages site, so day one is product work, not plumbing.**
 
 A GitHub template for a **React + TypeScript + Tailwind** SPA on **Cloudflare Pages**, with docs-in-app, Pulumi, CI deploy, and the quality toolchain already in place.
 
-![Home — React Cloudflare Template](docs/screenshots/home.png)
+![Home: React Cloudflare Template](docs/screenshots/home.png)
 
 ```bash
 gh repo create my-app --template mzworthington/react-cloudflare-template --public --clone
@@ -19,16 +19,16 @@ Or click **Use this template** on GitHub.
 
 ## On the box
 
-Everything below is included when you create from the template — not a backlog of “nice to haves.”
+Everything below is included when you create from the template, not a backlog of “nice to haves.”
 
-![In-app docs — What's included](docs/screenshots/docs-overview.png)
+![In-app docs: What's included](docs/screenshots/docs-overview.png)
 
 | You get             | What it is                                                                                                                                                          |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Site**            | A Vite + React + TypeScript SPA under `app/`, with a Tailwind starter UI, routing, and `bin/init-project.sh` to set brand name, slug, and origin.                   |
 | **Hosting**         | Cloudflare Pages: Pulumi defines the project (+ optional custom domain), CI builds on `main`, Wrangler deploys `app/dist`. `*.pages.dev` works before DNS is ready. |
-| **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs` — no separate docs framework or object storage.               |
-| **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI** — see [Quality](#quality).               |
+| **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs`, with no separate docs framework or object storage.               |
+| **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI**; see [Quality](#quality).               |
 | **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), and a Lighthouse CI workflow with report artifacts.                                        |
 | **Agent-ready**     | Thin `AGENTS.md` pointing at [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit) so coding agents share the same conventions.               |
 
@@ -45,9 +45,9 @@ Stack: **Vite 8 · React 19 · TypeScript 7 · Tailwind 4 · pnpm · Mise**.
 
 ## Workflows (GitHub Actions)
 
-Five workflows ship in `.github/workflows/` — the automation most greenfield repos put off for months:
+Five workflows ship in `.github/workflows/`: the automation most greenfield repos put off for months.
 
-![In-app docs — Workflows](docs/screenshots/docs-workflows.png)
+![In-app docs: Workflows](docs/screenshots/docs-workflows.png)
 
 | Workflow              | File                                                               | When it runs                                   | What it does                                                                                                      |
 | --------------------- | ------------------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -69,7 +69,7 @@ push/PR   ──► CodeQL
 
 ## Quality
 
-Same idea as the in-app [Quality](docs/quality.md) doc: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** / **lint-staged**, **CodeQL**, and **Lighthouse CI** — fail fast locally, enforce on every PR, schedule the heavier checks.
+Same idea as the in-app [Quality](docs/quality.md) doc: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** / **lint-staged**, **CodeQL**, and **Lighthouse CI**: fail fast locally, enforce on every PR, schedule the heavier checks.
 
 | Tool                                 | What it does                                       | When                                       |
 | ------------------------------------ | -------------------------------------------------- | ------------------------------------------ |
@@ -109,7 +109,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
 ## Nothing → live site
 
 1. **Create** from the template and clone.
-2. **Brand it** — slug, display name, description, public origin:
+2. **Brand it**: slug, display name, description, public origin:
 
    ```bash
    bin/init-project.sh --name "My App" --slug my-app \
@@ -125,7 +125,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    ```
 
 4. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain).
-   Hostnames and tokens stay out of the template — use local `.env` or GitHub vars.
+   Hostnames and tokens stay out of the template; use local `.env` or GitHub vars.
    Full walkthrough: [docs/custom-domains.md](docs/custom-domains.md).
 
    ```bash
@@ -134,8 +134,8 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    bin/setup-cloudflare-hosting.sh
    ```
 
-5. **Apply infra** — `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.
-6. **Deploy** — push to `main`; CI builds and runs `wrangler pages deploy`.
+5. **Apply infra**: `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.
+6. **Deploy**: push to `main`; CI builds and runs `wrangler pages deploy`.
 7. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom hostnames after DNS is active).
 
 `bin/init-project.sh` updates `app/src/siteConfig.ts`, `wrangler.toml`, package names, HTML title/description, and the CI Pages fallback. Re-run with `--force` to change again.
@@ -160,10 +160,10 @@ Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/cus
 
 ## Styling
 
-The starter ships a light Tailwind look (Syne + Source Sans 3, coastal-ink tokens in `app/src/index.css`). Treat it as a demo shell — rebrand colors and type for your product once the plumbing is yours.
+The starter ships a light Tailwind look (Syne + Source Sans 3, coastal-ink tokens in `app/src/index.css`). Treat it as a demo shell; rebrand colors and type for your product once the plumbing is yours.
 
 ---
 
 ## Who it's for
 
-Side projects, internal tools, and product MVPs that should look and behave like they belong in production from the first push — especially if Cloudflare Pages is already your hosting default.
+Side projects, internal tools, and product MVPs that should look and behave like they belong in production from the first push, especially if Cloudflare Pages is already your hosting default.

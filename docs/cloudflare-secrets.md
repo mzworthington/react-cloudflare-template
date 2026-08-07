@@ -1,8 +1,8 @@
-# Cloudflare hosting — secrets checklist
+# Cloudflare hosting: secrets checklist
 
-Companion to **[Custom domains](./custom-domains.md)** (hostname layouts and step-by-step). This page lists where secrets and vars live.
+Companion to **[Custom domains](./custom-domains.md)** (subdomain hostnames and step-by-step). This page lists where secrets and vars live.
 
-Real account IDs, zone IDs, API tokens, and hostnames belong in **local `.env`** (gitignored), **Bitwarden**, or **GitHub Actions secrets/vars** — never in committed template sources.
+Real account IDs, zone IDs, API tokens, and hostnames belong in **local `.env`** (gitignored), **Bitwarden**, or **GitHub Actions secrets/vars**, never in committed template sources.
 
 ## Bootstrap
 
@@ -30,11 +30,11 @@ bin/setup-cloudflare-hosting.sh
 
 Then `cd infra/cloudflare && pulumi up`, or merge to `main` for CI.
 
-Set public origin in the app with `bin/init-project.sh --origin https://app.example.com` (writes `SITE_ORIGIN` in `app/src/siteConfig.ts` — expected after fork/customize, not as template defaults).
+Set public origin in the app with `bin/init-project.sh --origin https://app.example.com` (writes `SITE_ORIGIN` in `app/src/siteConfig.ts`; expected after fork/customize, not as template defaults).
 
-### Registrar nameservers (custom domain only)
+### Existing zone required
 
-The **zone** (`DOMAIN`) must already be active on Cloudflare. Subdomains do not need separate registrar changes — Pulumi creates the CNAME in that zone. `*.pages.dev` works without a custom domain.
+The **zone** (`DOMAIN`) must already be active on Cloudflare. Bootstrap only attaches **subdomains** (CNAMEs) in that zone; it does not create zones or change registrar nameservers. `*.pages.dev` works without a custom domain.
 
 ## Secrets / vars
 
@@ -46,8 +46,6 @@ The **zone** (`DOMAIN`) must already be active on Cloudflare. Subdomains do not 
 | `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow      |
 | `PULUMI_PAGES_PROJECT_NAME` | variable | Deploy + Pulumi      |
 | `PULUMI_PAGES_HOSTNAMES`    | variable | Pulumi (JSON array)  |
-| `PULUMI_APEX_DOMAIN`        | variable | Legacy apex+www only |
-| `PULUMI_WWW_DOMAIN`         | variable | Legacy apex+www only |
 
 Prefer a **dedicated BWS project** (or local `.env`) per site so product-specific IDs like `CLOUDFLARE_ZONE_ID` are not shared across zones. The bootstrap script always resolves the zone from `DOMAIN` and will warn if an injected zone id does not match.
 

@@ -1,6 +1,6 @@
 # Quality
 
-The template ships a full local + CI quality toolchain — not “add Prettier later.”
+The template ships a full local + CI quality toolchain, not “add Prettier later.”
 
 **In the box by name:**
 
@@ -17,7 +17,7 @@ The template ships a full local + CI quality toolchain — not “add Prettier l
 | **Lighthouse CI**                | Perf / a11y / SEO gates (`app/lighthouserc.cjs`)                                        |
 | **Playwright**                   | Docs/README screenshot capture (`pnpm record:docs-media`)                               |
 
-Quality is layered so problems fail early — on your laptop, on every PR, and on a weekly schedule for slower checks.
+Quality is layered so problems fail early: on your laptop, on every PR, and on a weekly schedule for slower checks.
 
 ## Local gates
 
@@ -41,8 +41,8 @@ pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip && pnpm test && pn
 
 On relevant staged files (`app/`, `docs/`, or common source extensions), `.husky/pre-commit` runs:
 
-1. **lint-staged** — **Prettier** `--write` on staged paths
-2. **`pnpm format:check`** — full Prettier scope (app + root docs / GitHub YAML)
+1. **lint-staged**: **Prettier** `--write` on staged paths
+2. **`pnpm format:check`**: full Prettier scope (app + root docs / GitHub YAML)
 3. **`pnpm lint`** (**oxlint**) + **`pnpm typecheck`** (**TypeScript**)
 
 So formatting and type breaks rarely wait for CI. **knip** and **Vitest** still run in CI on every PR (and you can run them locally anytime).

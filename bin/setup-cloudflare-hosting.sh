@@ -3,14 +3,15 @@
 # Validates bws secrets (optional), syncs to GitHub Actions, configures Pulumi.
 # Does not run pulumi preview/up.
 #
+# Assumes an existing, active Cloudflare zone. Custom hostnames are subdomains
+# on that zone only (this script does not create zones or configure nameservers).
+#
 # Prefers values from repo-root `.env` (gitignored; see `.env.example`).
 # Shell-exported vars override `.env`. CI uses GitHub secrets/vars instead.
 #
 # Requires (env or .env):
-#   PULUMI_STACK, DOMAIN (Cloudflare zone name), PAGES_PROJECT_NAME
-# Hostnames (pick one style):
-#   PAGES_HOSTNAMES=app.example.com[,www.example.com]   # preferred (subdomain or list)
-#   WWW_DOMAIN=www.example.com                          # classic: attaches DOMAIN + WWW_DOMAIN
+#   PULUMI_STACK, DOMAIN (existing Cloudflare zone name), PAGES_PROJECT_NAME
+#   PAGES_HOSTNAMES=app.example.com[,staging.example.com]
 # Optional bws:
 #   BWS_ACCESS_TOKEN, BWS_PROJECT_ID
 #   (if unset, reads CLOUDFLARE_* / PULUMI_ACCESS_TOKEN from the environment)
@@ -29,18 +30,14 @@ if [[ -f "${ROOT}/.env" ]]; then
   set +a
 fi
 
-: "${PULUMI_STACK:?Set PULUMI_STACK (Pulumi stack name) — see .env.example}"
-: "${DOMAIN:?Set DOMAIN (Cloudflare zone name, e.g. example.com)}"
+: "${PULUMI_STACK:?Set PULUMI_STACK (Pulumi stack name); see .env.example}"
+: "${DOMAIN:?Set DOMAIN (existing Cloudflare zone name, e.g. example.com)}"
 : "${PAGES_PROJECT_NAME:?Set PAGES_PROJECT_NAME}"
+: "${PAGES_HOSTNAMES:?Set PAGES_HOSTNAMES (subdomain list, e.g. app.example.com)}"
 
 STACK="${PULUMI_STACK}"
 
-if [[ -n "${PAGES_HOSTNAMES:-}" ]]; then
-  IFS=',' read -r -a HOSTNAME_ARRAY <<< "$PAGES_HOSTNAMES"
-else
-  : "${WWW_DOMAIN:?Set PAGES_HOSTNAMES (e.g. app.example.com) or WWW_DOMAIN for classic apex+www}"
-  HOSTNAME_ARRAY=("$DOMAIN" "$WWW_DOMAIN")
-fi
+IFS=',' read -r -a HOSTNAME_ARRAY <<< "$PAGES_HOSTNAMES"
 
 # Trim whitespace around each hostname.
 PAGES_HOSTNAMES_JSON='['
@@ -53,6 +50,10 @@ for i in "${!HOSTNAME_ARRAY[@]}"; do
   PAGES_HOSTNAMES_JSON+="\"${h}\""
 done
 PAGES_HOSTNAMES_JSON+=']'
+if [[ "$PAGES_HOSTNAMES_JSON" == '[]' ]]; then
+  echo "PAGES_HOSTNAMES produced an empty hostname list" >&2
+  exit 1
+fi
 
 for c in gh pulumi jq curl pnpm; do
   command -v "$c" >/dev/null || { echo "Missing: $c"; exit 1; }
@@ -66,11 +67,11 @@ if [[ -n "${BWS_ACCESS_TOKEN:-}" && -n "${BWS_PROJECT_ID:-}" ]]; then
 fi
 
 export ROOT DOMAIN STACK PAGES_PROJECT_NAME PAGES_HOSTNAMES_JSON USE_BWS
-export PAGES_HOSTNAMES="${PAGES_HOSTNAMES:-}" WWW_DOMAIN="${WWW_DOMAIN:-}"
+export PAGES_HOSTNAMES="${PAGES_HOSTNAMES:-}"
 export BWS_PROJECT_ID="${BWS_PROJECT_ID:-}"
 
 # Body runs under `bash` with stdin from the heredoc (same pattern as Blueprint).
-# Do not use `bash -c "$(declare -f …)"` — `bws run` mangles that.
+# Do not use `bash -c "$(declare -f …)"`; `bws run` mangles that.
 if [[ "$USE_BWS" == "1" ]]; then
   bws run --project-id "$BWS_PROJECT_ID" -- \
     env BWS_ACCESS_TOKEN="${BWS_ACCESS_TOKEN}" USE_BWS=1 \
@@ -85,7 +86,7 @@ die() { echo "✗ $*" >&2; exit 1; }
 require_secret() {
   local name=$1
   if [[ "${USE_BWS:-0}" == "1" ]]; then
-    [[ -n "${!name:-}" ]] || die "${name} not set — add it to bws project ${BWS_PROJECT_ID}"
+    [[ -n "${!name:-}" ]] || die "${name} not set; add it to bws project ${BWS_PROJECT_ID}"
   else
     [[ -n "${!name:-}" ]] || die "${name} not set"
   fi
@@ -121,7 +122,7 @@ mint_pulumi_token() {
     pulumi whoami >/dev/null 2>&1 || pulumi login
     pulumi api CreatePersonalToken -F description="cloudflare-hosting-ci-${DOMAIN}" -F expires=0 --output json
   ) | jq -r '.tokenValue // empty')
-  [[ -n "$token" ]] || die "pulumi api CreatePersonalToken failed — run: pulumi login"
+  [[ -n "$token" ]] || die "pulumi api CreatePersonalToken failed; run: pulumi login"
   PULUMI_ACCESS_TOKEN="$token"
   export PULUMI_ACCESS_TOKEN
   bws_put PULUMI_ACCESS_TOKEN "$PULUMI_ACCESS_TOKEN"
@@ -147,7 +148,7 @@ require_secret CLOUDFLARE_ACCOUNT_ID
 
 echo "→ Zone ${DOMAIN}"
 # Always resolve by DOMAIN name. A shared BWS project may already have
-# CLOUDFLARE_ZONE_ID for a different product (e.g. archlens.dev) — do not trust it blindly.
+# CLOUDFLARE_ZONE_ID for a different product; do not trust it blindly.
 RESOLVED_ZONE_ID=$(cf_api "https://api.cloudflare.com/client/v4/zones?name=${DOMAIN}" \
   | jq -r '.result[0].id // empty')
 [[ -n "$RESOLVED_ZONE_ID" ]] || die "No Cloudflare zone named ${DOMAIN} visible to this API token"
@@ -164,10 +165,7 @@ ZONE_STATUS=$(cf_api "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZO
   | jq -r '.result.status // empty')
 echo "  ${ZONE_NAME} (${ZONE_STATUS})"
 if [[ "$ZONE_STATUS" != "active" ]]; then
-  echo "  Zone status: ${ZONE_STATUS} (need active — update registrar nameservers if pending)"
-  cf_api "https://api.cloudflare.com/client/v4/zones/${CLOUDFLARE_ZONE_ID}" \
-    | jq -r '.result.name_servers[]?' | sed 's/^/  NS: /'
-  die "Zone not active yet — fix nameservers and re-run"
+  die "Zone ${DOMAIN} must already be active on Cloudflare (subdomains only; this script does not configure zones)"
 fi
 
 if [[ -z "${PULUMI_ACCESS_TOKEN:-}" ]]; then
@@ -175,7 +173,7 @@ if [[ -z "${PULUMI_ACCESS_TOKEN:-}" ]]; then
 elif pulumi_token_valid; then
   echo "→ Pulumi access token ok"
 else
-  echo "→ Pulumi access token invalid — minting a new one"
+  echo "→ Pulumi access token invalid; minting a new one"
   mint_pulumi_token
 fi
 
@@ -186,11 +184,6 @@ printf '%s' "$CLOUDFLARE_ZONE_ID" | gh secret set CLOUDFLARE_ZONE_ID
 printf '%s' "$PULUMI_ACCESS_TOKEN" | gh secret set PULUMI_ACCESS_TOKEN
 gh variable set PULUMI_PAGES_PROJECT_NAME --body "$PAGES_PROJECT_NAME"
 gh variable set PULUMI_PAGES_HOSTNAMES --body "$PAGES_HOSTNAMES_JSON"
-# Keep legacy vars populated for older docs/workflows when classic mode is used.
-if [[ -z "${PAGES_HOSTNAMES:-}" && -n "${WWW_DOMAIN:-}" ]]; then
-  gh variable set PULUMI_APEX_DOMAIN --body "$DOMAIN"
-  gh variable set PULUMI_WWW_DOMAIN --body "$WWW_DOMAIN"
-fi
 
 echo "→ Pulumi stack ${STACK}"
 cd "${ROOT}/infra/cloudflare"
