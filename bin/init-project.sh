@@ -23,8 +23,8 @@ cd "$ROOT"
 
 TEMPLATE_SLUG="react-cloudflare-template"
 TEMPLATE_NAME="React Cloudflare Template"
-TEMPLATE_DESCRIPTION="React on Cloudflare Pages with hosting, docs, and CI wired — so day one is product work, not plumbing."
-TEMPLATE_TAGLINE="Hosting, docs, and CI already wired — so day one is product work, not plumbing."
+TEMPLATE_DESCRIPTION="React on Cloudflare Pages with hosting, docs, and CI wired, so day one is product work, not plumbing."
+TEMPLATE_TAGLINE="Hosting, docs, and CI already wired, so day one is product work, not plumbing."
 TEMPLATE_ORIGIN="https://example.com"
 
 NAME=""
@@ -205,7 +205,7 @@ def q(value: str) -> str:
     return value.replace("\\", "\\\\").replace("'", "\\'")
 
 pathlib.Path("app/src/siteConfig.ts").write_text(
-    f"""/** Product identity — customize with `bin/init-project.sh` after creating from the template. */
+    f"""/** Product identity: customize with `bin/init-project.sh` after creating from the template. */
 export const SITE_SLUG = '{q(slug)}';
 export const SITE_NAME = '{q(name)}';
 export const SITE_DESCRIPTION =
@@ -224,6 +224,14 @@ export function templateCloneSnippet(appSlug = 'my-app'): string {{
     `gh repo create ${{appSlug}} --template ${{SITE_TEMPLATE_REF}} --public --clone`,
     `cd ${{appSlug}}`,
     `bin/init-project.sh --name "My App" --slug ${{appSlug}}`,
+  ].join('\\n');
+}}
+
+/** Short hosting teaser; full walkthrough lives in docs/custom-domains. */
+export function hostingBootstrapSnippet(): string {{
+  return [
+    'cp .env.example .env   # DOMAIN, PAGES_HOSTNAMES, BWS_* or token',
+    'bin/setup-cloudflare-hosting.sh',
   ].join('\\n');
 }}
 """

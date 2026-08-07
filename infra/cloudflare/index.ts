@@ -6,12 +6,11 @@ const accountId = config.require('accountId');
 const zoneId = config.require('zoneId');
 const pagesProjectName = config.require('pagesProjectName');
 
-/** Hostnames attached to the Pages project (apex, www, or a subdomain). */
+/** Subdomain hostnames attached to the Pages project (existing zone assumed). */
 function resolvePagesHostnames(): string[] {
   const listed = config.getObject<string[]>('pagesHostnames');
   if (listed && listed.length > 0) return listed;
-  // Backward-compatible apex + www mode.
-  return [config.require('apexDomain'), config.require('wwwDomain')];
+  throw new Error('Set pagesHostnames to a JSON array of subdomains, e.g. ["app.example.com"]');
 }
 
 const pagesHostnames = resolvePagesHostnames();

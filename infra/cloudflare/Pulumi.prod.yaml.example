@@ -4,10 +4,6 @@ config:
   react-cloudflare-template:accountId: YOUR_CLOUDFLARE_ACCOUNT_ID
   react-cloudflare-template:zoneId: YOUR_CLOUDFLARE_ZONE_ID
   react-cloudflare-template:pagesProjectName: my-app
-  # Subdomain (or any list of hostnames on the zone):
+  # Subdomains on an existing active zone:
   react-cloudflare-template:pagesHostnames:
     - app.example.com
-
-  # Classic apex + www (alternative to pagesHostnames):
-  # react-cloudflare-template:apexDomain: example.com
-  # react-cloudflare-template:wwwDomain: www.example.com

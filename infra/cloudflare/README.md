@@ -1,8 +1,8 @@
 # Cloudflare infrastructure (Pulumi)
 
-Pages project + custom hostnames (subdomain and/or apex/`www`). The SPA is built in CI and deployed with `wrangler pages deploy`.
+Pages project + custom **subdomain** hostnames on an existing active zone. The SPA is built in CI and deployed with `wrangler pages deploy`.
 
-Real zone/hostname values live in gitignored `Pulumi.<stack>.yaml`, local `.env`, or GitHub Actions vars — see [Custom domains](../../docs/custom-domains.md) and [secrets checklist](../../docs/cloudflare-secrets.md).
+Real zone/hostname values live in gitignored `Pulumi.<stack>.yaml`, local `.env`, or GitHub Actions vars; see [Custom domains](../../docs/custom-domains.md) and [secrets checklist](../../docs/cloudflare-secrets.md).
 
 ## Quick setup
 
@@ -12,7 +12,7 @@ cp ../../.env.example ../../.env   # edit DOMAIN, PAGES_HOSTNAMES, tokens
 pulumi up
 ```
 
-Or merge to `main` — `.github/workflows/pulumi-cloudflare.yml` previews, then waits for **pulumi-prod** environment approval before `pulumi up`.
+Or merge to `main`. `.github/workflows/pulumi-cloudflare.yml` previews, then waits for **pulumi-prod** environment approval before `pulumi up`.
 
 ## Related
 

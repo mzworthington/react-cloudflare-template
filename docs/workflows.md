@@ -1,6 +1,6 @@
 # Workflows (GitHub Actions)
 
-Five workflows ship in `.github/workflows/` — the automation most greenfield repos put off for months:
+Five workflows ship in `.github/workflows/`: the automation most greenfield repos put off for months.
 
 | Workflow              | File                    | When it runs                                   | What it does                                                                                                      |
 | --------------------- | ----------------------- | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |

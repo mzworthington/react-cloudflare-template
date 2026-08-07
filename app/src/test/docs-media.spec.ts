@@ -12,7 +12,7 @@ test.describe('docs media', () => {
   });
 
   test.beforeEach(async ({ page }) => {
-    // Keep screenshots stable — hero uses fade-up that starts at opacity 0.
+    // Keep screenshots stable: hero uses fade-up that starts at opacity 0.
     await page.addInitScript(() => {
       const style = document.createElement('style');
       style.textContent =

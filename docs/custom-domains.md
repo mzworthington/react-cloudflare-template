@@ -1,32 +1,28 @@
 # Custom domains
 
-Attach your own hostname(s) to the Cloudflare Pages project. Real zone names, hostnames, and tokens belong in **local `.env`** (gitignored) or **GitHub Actions secrets/vars** — not in committed template files. See also [secrets checklist](./cloudflare-secrets.md).
+Attach subdomain hostname(s) to the Cloudflare Pages project on an **existing active zone**. Real zone names, hostnames, and tokens belong in **local `.env`** (gitignored) or **GitHub Actions secrets/vars**, not in committed template files. See also [secrets checklist](./cloudflare-secrets.md).
 
 ## What you get
 
-| Layer             | Role                                                                     |
-| ----------------- | ------------------------------------------------------------------------ |
-| **Pages project** | Named by `PAGES_PROJECT_NAME` (also `https://<name>.pages.dev`)          |
-| **Pulumi**        | Creates the Pages project, DNS CNAMEs, and Pages custom domains          |
-| **CI deploy**     | Builds `app/dist` and runs `wrangler pages deploy` on `main`             |
-| **`SITE_ORIGIN`** | App public URL (canonical/SEO) — set with `bin/init-project.sh --origin` |
+| Layer             | Role                                                                    |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Pages project** | Named by `PAGES_PROJECT_NAME` (also `https://<name>.pages.dev`)         |
+| **Pulumi**        | Creates the Pages project, DNS CNAMEs, and Pages custom domains         |
+| **CI deploy**     | Builds `app/dist` and runs `wrangler pages deploy` on `main`            |
+| **`SITE_ORIGIN`** | App public URL (canonical/SEO); set with `bin/init-project.sh --origin` |
 
-You can ship on `*.pages.dev` only, then add a custom domain later.
+You can ship on `*.pages.dev` only, then add a custom subdomain later.
 
 ## Prerequisites
 
-1. A **Cloudflare zone** for your domain (e.g. `example.com`) that is **Active** (nameservers pointed at Cloudflare if this is a new zone).
+1. An **existing, active Cloudflare zone** for your domain (e.g. `example.com`). This template assumes subdomains only; it does not create zones or configure registrar nameservers.
 2. An API token with:
    - Account → **Cloudflare Pages: Edit**
    - Zone → **Zone: Read**
    - Zone → **DNS: Edit**
 3. `gh` authenticated to the target repo, and `pulumi login` (the bootstrap script can mint a CI token).
 
-## Choose a hostname layout
-
-### A. Subdomain on an existing zone (common)
-
-Use when the apex already hosts something else (blog, marketing site, etc.).
+## Hostname layout
 
 | Variable             | Example                                         |
 | -------------------- | ----------------------------------------------- |
@@ -35,20 +31,9 @@ Use when the apex already hosts something else (blog, marketing site, etc.).
 | `PAGES_PROJECT_NAME` | `my-app`                                        |
 | `--origin`           | `https://app.example.com`                       |
 
-Multiple hostnames: `PAGES_HOSTNAMES=app.example.com,staging.example.com`.
+Multiple subdomains: `PAGES_HOSTNAMES=app.example.com,staging.example.com`.
 
-### B. Apex + www (site owns the zone)
-
-| Variable             | Example                                                                    |
-| -------------------- | -------------------------------------------------------------------------- |
-| `DOMAIN`             | `example.com`                                                              |
-| `WWW_DOMAIN`         | `www.example.com` _(or set `PAGES_HOSTNAMES=example.com,www.example.com`)_ |
-| `PAGES_PROJECT_NAME` | `my-app`                                                                   |
-| `--origin`           | `https://example.com`                                                      |
-
-Prefer `PAGES_HOSTNAMES` for new setups; `WWW_DOMAIN` remains for classic apex+www.
-
-### C. No custom domain yet
+### No custom domain yet
 
 Omit hostnames bootstrap later. After the first `main` deploy, open `https://<PAGES_PROJECT_NAME>.pages.dev`.
 
@@ -76,7 +61,7 @@ PULUMI_STACK=prod
 DOMAIN=example.com
 PAGES_HOSTNAMES=app.example.com
 PAGES_PROJECT_NAME=my-app
-CLOUDFLARE_API_TOKEN=...   # or use Bitwarden (BWS_*) — see secrets doc
+CLOUDFLARE_API_TOKEN=...   # or use Bitwarden (BWS_*); see secrets doc
 ```
 
 `.env` is gitignored. Do not put real domains in README or `siteConfig` defaults inside a public template.
@@ -91,7 +76,7 @@ bin/setup-cloudflare-hosting.sh
 
 The script:
 
-- Resolves account/zone IDs if missing
+- Resolves account/zone IDs if missing (zone must already be active)
 - Writes **GitHub** secrets/vars (`CLOUDFLARE_*`, `PULUMI_*`, `PULUMI_PAGES_HOSTNAMES`)
 - Writes **gitignored** `infra/cloudflare/Pulumi.<stack>.yaml`
 
@@ -106,7 +91,7 @@ Or push infra changes to `main` and approve the **pulumi-prod** GitHub Environme
 Pulumi creates:
 
 - Cloudflare Pages project
-- Proxied CNAME(s) for each hostname → the Pages `*.pages.dev` target
+- Proxied CNAME(s) for each subdomain → the Pages `*.pages.dev` target
 - Pages custom domain attachment(s)
 
 ### 5. Deploy the site
@@ -115,8 +100,8 @@ Push to `main` (or wait for the next CI run). Wrangler uploads `app/dist`.
 
 ### 6. Verify
 
-1. `https://<PAGES_PROJECT_NAME>.pages.dev` — always works after deploy.
-2. `https://<your-hostname>` — after DNS propagates (usually minutes on Cloudflare).
+1. `https://<PAGES_PROJECT_NAME>.pages.dev`: always works after deploy.
+2. `https://<your-subdomain>`: after DNS propagates (usually minutes on Cloudflare).
 3. Cloudflare dashboard → **Pages** → project → **Custom domains** shows Active.
 
 ## Where configuration lives
@@ -132,7 +117,7 @@ Push to `main` (or wait for the next CI run). Wrangler uploads `app/dist`.
 
 | Symptom                                             | Check                                                                                                                                                                                                |
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Zone not active                                     | Registrar nameservers must match Cloudflare’s NS for `DOMAIN`.                                                                                                                                       |
+| Zone missing or not active                          | Add the zone in Cloudflare and wait until it is **Active** before running bootstrap. This template does not configure nameservers.                                                                   |
 | Custom domain pending                               | DNS CNAME exists and is proxied (orange cloud); wait for SSL.                                                                                                                                        |
 | CI Pulumi fails on hostnames                        | Set repo variable `PULUMI_PAGES_HOSTNAMES` to JSON, e.g. `["app.example.com"]`.                                                                                                                      |
 | Wrong site origin in HTML/meta                      | Re-run `bin/init-project.sh --origin https://… --force` and redeploy.                                                                                                                                |
@@ -141,7 +126,7 @@ Push to `main` (or wait for the next CI run). Wrangler uploads `app/dist`.
 
 ## Related
 
-- [Setup](./setup.md) — local app + quality
-- [Secrets checklist](./cloudflare-secrets.md) — token scopes and var names
-- [Workflows](./workflows.md) — CI deploy + Pulumi approval gate
-- [ADR 0001](./ADRs/0001-cloudflare-pages-pulumi-wrangler.md) — why Pages + Pulumi + Wrangler
+- [Setup](./setup.md): local app + quality
+- [Secrets checklist](./cloudflare-secrets.md): token scopes and var names
+- [Workflows](./workflows.md): CI deploy + Pulumi approval gate
+- [ADR 0001](./ADRs/0001-cloudflare-pages-pulumi-wrangler.md): why Pages + Pulumi + Wrangler

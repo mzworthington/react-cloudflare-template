@@ -18,9 +18,9 @@ The template should take a new project from empty clone to a deployed site with 
 
 ## Considered Options
 
-- Option A — GitHub Pages only
-- Option B — Cloudflare Pages via dashboard Git integration
-- Option C — Pulumi for Pages/domains + GitHub Actions + Wrangler upload
+- Option A: GitHub Pages only
+- Option B: Cloudflare Pages via dashboard Git integration
+- Option C: Pulumi for Pages/domains + GitHub Actions + Wrangler upload
 
 ## Decision Outcome
 
@@ -30,4 +30,4 @@ Chosen option: "**Option C**". Pulumi manages the Pages project and optional cus
 
 - Good, because deploy stays behind quality gates
 - Good, because `*.pages.dev` works before custom DNS is ready
-- Bad, because registrar nameserver changes remain a one-time manual step for custom domains
+- Bad, because an existing active Cloudflare zone is required before attaching custom subdomains
