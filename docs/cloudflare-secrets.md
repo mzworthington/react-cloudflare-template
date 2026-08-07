@@ -52,5 +52,7 @@ Prefer a **dedicated BWS project** (or local `.env`) per site so product-specifi
 ## API token scopes
 
 - Account → **Cloudflare Pages: Edit**
+- Account → **Account Settings: Edit** (Web Analytics)
 - Zone → **Zone: Read**
 - Zone → **DNS: Edit** (custom domains)
+- Zone → **Zone Settings: Edit** (Observatory scheduled tests)

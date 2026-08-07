@@ -46,11 +46,24 @@ for (const hostname of pagesHostnames) {
     },
     { dependsOn: [dns] },
   );
+
+  new cloudflare.ObservatoryScheduledTest(`observatory-${safe}`, {
+    zoneId,
+    url: hostname,
+  });
 }
 
 const zone = cloudflare.getZoneOutput({ zoneId });
+
+/** RUM beacon auto-injected for orange-clouded hosts on this zone. */
+const webAnalytics = new cloudflare.WebAnalyticsSite('web-analytics', {
+  accountId,
+  zoneTag: zoneId,
+  autoInstall: true,
+});
 
 export const pagesProjectNameOut = pagesProject.name;
 export const pagesSubdomain = pagesProject.subdomain;
 export const pagesHostnamesOut = pagesHostnames;
 export const zoneName = zone.name;
+export const webAnalyticsSiteTag = webAnalytics.siteTag;
