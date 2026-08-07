@@ -4,11 +4,11 @@ Attach subdomain hostname(s) to the Cloudflare Pages project on an **existing ac
 
 ## What you get
 
-| Layer             | Role                                                                     |
-| ----------------- | ------------------------------------------------------------------------ |
-| **Pages project** | Named by `PAGES_PROJECT_NAME` (also `https://<name>.pages.dev`)          |
-| **Pulumi**        | Creates the Pages project, DNS CNAMEs, and Pages custom domains          |
-| **CI deploy**     | Builds `app/dist` and runs `wrangler pages deploy` on `main`             |
+| Layer             | Role                                                                    |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Pages project** | Named by `PAGES_PROJECT_NAME` (also `https://<name>.pages.dev`)         |
+| **Pulumi**        | Creates the Pages project, DNS CNAMEs, and Pages custom domains         |
+| **CI deploy**     | Builds `app/dist` and runs `wrangler pages deploy` on `main`            |
 | **`SITE_ORIGIN`** | App public URL (canonical/SEO); set with `bin/init-project.sh --origin` |
 
 You can ship on `*.pages.dev` only, then add a custom subdomain later.

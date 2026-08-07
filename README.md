@@ -27,8 +27,8 @@ Everything below is included when you create from the template, not a backlog of
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Site**            | A Vite + React + TypeScript SPA under `app/`, with a Tailwind starter UI, routing, and `bin/init-project.sh` to set brand name, slug, and origin.                   |
 | **Hosting**         | Cloudflare Pages: Pulumi defines the project (+ optional custom domain), CI builds on `main`, Wrangler deploys `app/dist`. `*.pages.dev` works before DNS is ready. |
-| **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs`, with no separate docs framework or object storage.               |
-| **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI**; see [Quality](#quality).               |
+| **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs`, with no separate docs framework or object storage.           |
+| **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI**; see [Quality](#quality).                |
 | **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), and a Lighthouse CI workflow with report artifacts.                                        |
 | **Agent-ready**     | Thin `AGENTS.md` pointing at [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit) so coding agents share the same conventions.               |
 
