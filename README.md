@@ -1,8 +1,8 @@
 # React Cloudflare Template
 
-**From empty repo to a live Cloudflare Pages site — without assembling the boring half yourself.**
+**From empty repo to a live Cloudflare Pages site — so day one is product work, not plumbing.**
 
-A GitHub template for a modern **React + TypeScript + Tailwind** SPA on **Cloudflare Pages**, with production habits already wired: **Prettier**, **oxlint**, **knip**, **Vitest**, **Husky** pre-commit, CI deploy, Pulumi, CodeQL, changelog, docs-in-app, and Lighthouse.
+A GitHub template for a **React + TypeScript + Tailwind** SPA on **Cloudflare Pages**, with docs-in-app, Pulumi, CI deploy, and the quality toolchain already in place.
 
 ![Home — React Cloudflare Template](docs/screenshots/home.png)
 
@@ -93,7 +93,7 @@ pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip && pnpm test && pn
 
 ## Why this instead of `npm create vite`?
 
-Vite gives you a blank app. This template gives you the **site + hosting + docs + CI** baseline so day one is product work, not plumbing:
+Vite gives you a blank app. This template is the baseline so day one is product work, not plumbing:
 
 | You get                                               | So you don't have to                               |
 | ----------------------------------------------------- | -------------------------------------------------- |

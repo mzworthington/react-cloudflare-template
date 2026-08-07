@@ -23,8 +23,8 @@ cd "$ROOT"
 
 TEMPLATE_SLUG="react-cloudflare-template"
 TEMPLATE_NAME="React Cloudflare Template"
-TEMPLATE_DESCRIPTION="React + Cloudflare Pages starter with CI, docs, changelog, and Lighthouse."
-TEMPLATE_TAGLINE="Ship a Vite + React + TypeScript app to Cloudflare Pages with CI, changelog, docs media, and Lighthouse already wired."
+TEMPLATE_DESCRIPTION="React on Cloudflare Pages with hosting, docs, and CI wired — so day one is product work, not plumbing."
+TEMPLATE_TAGLINE="Hosting, docs, and CI already wired — so day one is product work, not plumbing."
 TEMPLATE_ORIGIN="https://example.com"
 
 NAME=""

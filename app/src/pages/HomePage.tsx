@@ -6,10 +6,12 @@ import {
   SITE_REPO_URL,
   SITE_SLUG,
   SITE_TAGLINE,
+  hostingBootstrapSnippet,
   templateCloneSnippet,
 } from '../siteConfig';
 
 const CLONE_SNIPPET = templateCloneSnippet('my-app');
+const HOSTING_SNIPPET = hostingBootstrapSnippet();
 
 export function HomePage() {
   useEffect(() => {
@@ -36,11 +38,22 @@ export function HomePage() {
             View on GitHub →
           </a>
         </div>
-        <div className="hero-snippet" data-testid="template-snippet">
-          <p className="hero-snippet-label">Use this template</p>
-          <pre>
-            <code>{CLONE_SNIPPET}</code>
-          </pre>
+        <div className="hero-snippets">
+          <div className="hero-snippet" data-testid="template-snippet">
+            <p className="hero-snippet-label">Use this template</p>
+            <pre>
+              <code>{CLONE_SNIPPET}</code>
+            </pre>
+          </div>
+          <div className="hero-snippet" data-testid="hosting-snippet">
+            <p className="hero-snippet-label">Host on Cloudflare</p>
+            <pre>
+              <code>{HOSTING_SNIPPET}</code>
+            </pre>
+            <p className="hero-snippet-hint">
+              <a href="/docs/custom-domains">Custom domains &amp; secrets →</a>
+            </p>
+          </div>
         </div>
       </div>
     </section>

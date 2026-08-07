@@ -25,4 +25,13 @@ describe('HomePage', () => {
     expect(snippet.textContent).toContain(`--template ${SITE_TEMPLATE_REF}`);
     expect(snippet.textContent).toContain('bin/init-project.sh');
   });
+
+  it('shows a hosting bootstrap teaser linked to custom-domains docs', () => {
+    render(<HomePage />);
+    const snippet = screen.getByTestId('hosting-snippet');
+    expect(snippet.textContent).toContain('bin/setup-cloudflare-hosting.sh');
+    expect(snippet.textContent).toContain('.env.example');
+    const link = screen.getByRole('link', { name: /custom domains/i });
+    expect(link.getAttribute('href')).toBe('/docs/custom-domains');
+  });
 });

@@ -2,9 +2,9 @@
 export const SITE_SLUG = 'react-cloudflare-template';
 export const SITE_NAME = 'React Cloudflare Template';
 export const SITE_DESCRIPTION =
-  'React + Cloudflare Pages starter with CI, docs, changelog, and Lighthouse.';
+  'React on Cloudflare Pages with hosting, docs, and CI wired — so day one is product work, not plumbing.';
 export const SITE_TAGLINE =
-  'Ship a Vite + React + TypeScript app to Cloudflare Pages with CI, changelog, docs media, and Lighthouse already wired.';
+  'Hosting, docs, and CI already wired — so day one is product work, not plumbing.';
 /** Public site origin (no trailing slash). Used for canonical/SEO when enabled. */
 export const SITE_ORIGIN = 'https://example.com';
 /** GitHub repository for this template (or your fork after init). */
@@ -17,5 +17,13 @@ export function templateCloneSnippet(appSlug = 'my-app'): string {
     `gh repo create ${appSlug} --template ${SITE_TEMPLATE_REF} --public --clone`,
     `cd ${appSlug}`,
     `bin/init-project.sh --name "My App" --slug ${appSlug}`,
+  ].join('\n');
+}
+
+/** Short hosting teaser — full walkthrough lives in docs/custom-domains. */
+export function hostingBootstrapSnippet(): string {
+  return [
+    'cp .env.example .env   # DOMAIN, PAGES_HOSTNAMES, BWS_* or token',
+    'bin/setup-cloudflare-hosting.sh',
   ].join('\n');
 }
