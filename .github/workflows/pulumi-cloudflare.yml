@@ -49,10 +49,14 @@ jobs:
           PULUMI_PAGES_HOSTNAMES: ${{ vars.PULUMI_PAGES_HOSTNAMES }}
 
       - name: Pulumi preview
-        working-directory: infra/cloudflare
+        uses: mzworthington/edge-dns/.github/actions/pulumi-rich-report@main
+        with:
+          command: preview
+          stack-name: prod
+          work-dir: infra/cloudflare
+          comment-on-pr: ${{ github.event_name == 'pull_request' }}
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-        run: pulumi preview --diff --non-interactive
 
   apply:
     name: Apply
@@ -76,7 +80,10 @@ jobs:
           PULUMI_PAGES_HOSTNAMES: ${{ vars.PULUMI_PAGES_HOSTNAMES }}
 
       - name: Pulumi up
-        working-directory: infra/cloudflare
+        uses: mzworthington/edge-dns/.github/actions/pulumi-rich-report@main
+        with:
+          command: up
+          stack-name: prod
+          work-dir: infra/cloudflare
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-        run: pulumi up --yes --non-interactive
