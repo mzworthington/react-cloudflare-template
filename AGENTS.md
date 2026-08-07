@@ -17,8 +17,16 @@ Before starting work, read:
 
 ## Project notes
 
+<<<<<<< HEAD
+
 - App code and pnpm workspace live under `app/`; run `cd app && pnpm …`.
 - Tailwind starter UI ships with CSS tokens in `app/src/index.css`; rebrand for your product.
+  \=======
+- App code and pnpm workspace live under `app/` — run `cd app && pnpm …`.
+- Tailwind coastal-ink UI: tokens + recipes in `app/src/index.css`, showcase at `/design-system`, assets in `design-pack/`; rebrand for your product.
+
+> > > > > > > 832ddcd (feat: enhance design system and branding features)
+
 - Docs are Markdown under `docs/`, rendered in-app (not a separate docs framework).
 - Hosting is Cloudflare Pages via Pulumi + Wrangler (no R2/catalog).
 - Before handover: run pre-commit checks (`cd app && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`).

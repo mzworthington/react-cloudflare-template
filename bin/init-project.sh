@@ -13,7 +13,7 @@
 #   --slug          kebab-case package + Pages project id (default: derived from --name)
 #   --description   Meta description / short summary
 #   --tagline       Home hero supporting sentence
-#   --origin        Public https origin, no trailing slash (for future SEO/canonical)
+#   --origin        Public https origin, no trailing slash (canonical + OG/Twitter URLs)
 #   --force         Allow re-running after an earlier customization
 #   -h, --help      Show this help
 set -euo pipefail
@@ -50,7 +50,7 @@ Options:
   --slug          kebab-case package + Pages project id (default: derived from --name)
   --description   Meta description / short summary
   --tagline       Home hero supporting sentence
-  --origin        Public https origin, no trailing slash (for future SEO/canonical)
+  --origin        Public https origin, no trailing slash (canonical + OG/Twitter URLs)
   --force         Allow re-running after an earlier customization
   -h, --help      Show this help
 EOF
@@ -259,9 +259,11 @@ replace_in_file .github/workflows/ci.yml \
   "vars.PULUMI_PAGES_PROJECT_NAME || '$SLUG'"
 
 # Static HTML head (build shell; SPA also uses siteConfig at runtime for brand)
-python3 - "$NAME" "$DESCRIPTION" <<'PY'
+python3 - "$NAME" "$DESCRIPTION" "$ORIGIN" <<'PY'
 import pathlib, re, sys
-name, description = sys.argv[1:3]
+
+name, description, origin = sys.argv[1:4]
+origin = origin.rstrip("/")
 html = pathlib.Path("app/index.html").read_text()
 html = re.sub(r"<title>[^<]*</title>", f"<title>{name}</title>", html, count=1)
 html = re.sub(
@@ -270,6 +272,35 @@ html = re.sub(
     html,
     count=1,
 )
+html = re.sub(
+    r'(<link\s+rel="canonical"\s+href=")[^"]*(")',
+    rf"\1{origin}/\2",
+    html,
+    count=1,
+)
+for prop, value in (
+    ("og:url", f"{origin}/"),
+    ("og:title", name),
+    ("og:description", description),
+    ("og:image", f"{origin}/assets/social-share.png"),
+):
+    html = re.sub(
+        rf'(<meta\s+property="{re.escape(prop)}"\s+content=")[^"]*(")',
+        rf"\1{value}\2",
+        html,
+        count=1,
+    )
+for name_attr, value in (
+    ("twitter:title", name),
+    ("twitter:description", description),
+    ("twitter:image", f"{origin}/assets/social-share.png"),
+):
+    html = re.sub(
+        rf'(<meta\s+name="{re.escape(name_attr)}"\s+content=")[^"]*(")',
+        rf"\1{value}\2",
+        html,
+        count=1,
+    )
 pathlib.Path("app/index.html").write_text(html)
 PY
 

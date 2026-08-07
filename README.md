@@ -160,7 +160,13 @@ Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/cus
 
 ## Styling
 
+<<<<<<< HEAD
 The starter ships a light Tailwind look (Syne + Source Sans 3, coastal-ink tokens in `app/src/index.css`). Treat it as a demo shell; rebrand colors and type for your product once the plumbing is yours.
+=======
+
+The starter ships a light Tailwind coastal-ink system (Syne + Source Sans 3, tokens and named recipes in `app/src/index.css`), a **design pack** under [`design-pack/`](design-pack/) (favicon, logos, PWA icons, `social-share.png`), and a lightweight in-app showcase at `/design-system`. Written guide: [`docs/design-system.md`](docs/design-system.md). Treat the shell as a demo — rebrand colors, type, and the mark for your product once the plumbing is yours.
+
+> > > > > > > 832ddcd (feat: enhance design system and branding features)
 
 ---
 
