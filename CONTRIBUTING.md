@@ -5,13 +5,15 @@
 See [Setup](docs/setup.md).
 
 ```bash
+bin/init-project.sh --name "My App" --slug my-app
 bin/setup-dev-env.sh
-pnpm dev
+cd app && pnpm dev
 ```
 
 ## Quality checks
 
 ```bash
+cd app
 pnpm format:check
 pnpm lint
 pnpm typecheck

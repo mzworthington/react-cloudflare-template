@@ -1,38 +1,129 @@
-# react-cloudflare-template
+# React Cloudflare Template
 
-GitHub template for a **React + TypeScript + Tailwind** app on **Cloudflare Pages**, with CI, changelog, docs media, Lighthouse, and Pulumi.
+**From empty repo to a live Cloudflare Pages site — without assembling the boring half yourself.**
 
-Use this repository as a [GitHub Template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template) (Settings → Template repository), or:
+A GitHub template for a modern **React + TypeScript + Tailwind** SPA on **Cloudflare Pages**, with production habits already wired: **Prettier**, **oxlint**, **knip**, **Vitest**, **Husky** pre-commit, CI deploy, Pulumi, CodeQL, changelog, docs-in-app, and Lighthouse.
+
+![Home — React Cloudflare Template](docs/screenshots/home.png)
 
 ```bash
 gh repo create my-app --template mzworthington/react-cloudflare-template --public --clone
 cd my-app
+bin/init-project.sh --name "My App" --slug my-app
+bin/setup-dev-env.sh && cd app && pnpm dev
 ```
 
-## What's included
+Or click **Use this template** on GitHub.
 
-| Area         | Details                                                                                        |
-| ------------ | ---------------------------------------------------------------------------------------------- |
-| App          | Vite 8, React 19, TypeScript 7, Tailwind 4 (no custom theme)                                   |
-| Docs         | Markdown under `docs/`, rendered in-app                                                        |
-| Quality      | Prettier, oxlint, Vitest, knip, Husky, CodeQL                                                  |
-| Changelog    | git-cliff + day-bucketed `bin/changelog-render.mjs`                                            |
-| Derived sync | Weekly workflow: changelog + docs screenshots                                                  |
-| Lighthouse   | Separate weekly workflow + report artifact                                                     |
-| Hosting      | Pulumi (Pages + optional custom domain) + Wrangler deploy                                      |
-| Agents       | Thin `AGENTS.md` → [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit) |
+---
+
+## On the box
+
+Everything below is included when you create from the template — not a backlog of “nice to haves.”
+
+![In-app docs — What's included](docs/screenshots/docs-overview.png)
+
+| You get             | What it is                                                                                                                                                          |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Site**            | A Vite + React + TypeScript SPA under `app/`, with a Tailwind starter UI, routing, and `bin/init-project.sh` to set brand name, slug, and origin.                   |
+| **Hosting**         | Cloudflare Pages: Pulumi defines the project (+ optional custom domain), CI builds on `main`, Wrangler deploys `app/dist`. `*.pages.dev` works before DNS is ready. |
+| **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs` — no separate docs framework or object storage.               |
+| **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI** — see [Quality](#quality).               |
+| **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), and a Lighthouse CI workflow with report artifacts.                                        |
+| **Agent-ready**     | Thin `AGENTS.md` pointing at [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit) so coding agents share the same conventions.               |
+
+```text
+Browser  →  React site (+ /docs)  →  Cloudflare Pages
+Git      →  docs/*.md (source of truth)
+GitHub   →  CI quality gates → wrangler pages deploy
+Pulumi   →  Pages project + optional custom domain
+```
+
+Stack: **Vite 8 · React 19 · TypeScript 7 · Tailwind 4 · pnpm · Mise**.
+
+---
+
+## Workflows (GitHub Actions)
+
+Five workflows ship in `.github/workflows/` — the automation most greenfield repos put off for months:
+
+![In-app docs — Workflows](docs/screenshots/docs-workflows.png)
+
+| Workflow              | File                                                               | When it runs                                   | What it does                                                                                                      |
+| --------------------- | ------------------------------------------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **CI & Deployment**   | [`ci.yml`](.github/workflows/ci.yml)                               | Push/PR to `main`, or manual                   | Format, lint, typecheck, knip, unit tests, build; on `main`, deploys `app/dist` to Cloudflare Pages with Wrangler |
+| **Pulumi Cloudflare** | [`pulumi-cloudflare.yml`](.github/workflows/pulumi-cloudflare.yml) | Changes under `infra/cloudflare/**`, or manual | `pulumi preview` always; `pulumi up` only after **pulumi-prod** environment approval                              |
+| **Refresh derived**   | [`refresh-derived.yml`](.github/workflows/refresh-derived.yml)     | Weekly (Sunday) + manual                       | Regenerates changelog + docs screenshots via `bin/sync-derived.sh` and commits when something changed             |
+| **Lighthouse**        | [`lighthouse.yml`](.github/workflows/lighthouse.yml)               | Weekly (Sunday) + manual                       | Builds the app, runs Lighthouse CI, uploads the report artifact                                                   |
+| **CodeQL**            | [`codeql.yml`](.github/workflows/codeql.yml)                       | Push/PR to `main` + weekly                     | Security analysis for JavaScript/TypeScript                                                                       |
+
+```text
+PR / main ──► CI & Deployment ──► (main) Pages deploy
+infra/**  ──► Pulumi preview ──► (approved) pulumi up
+schedule  ──► Refresh derived (changelog + screenshots)
+schedule  ──► Lighthouse report artifact
+push/PR   ──► CodeQL
+```
+
+---
+
+## Quality
+
+Same idea as the in-app [Quality](docs/quality.md) doc: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** / **lint-staged**, **CodeQL**, and **Lighthouse CI** — fail fast locally, enforce on every PR, schedule the heavier checks.
+
+| Tool                                 | What it does                                       | When                                       |
+| ------------------------------------ | -------------------------------------------------- | ------------------------------------------ |
+| **Prettier** (+ Tailwind class sort) | Format app, docs, and workflow YAML                | Local, lint-staged, CI                     |
+| **oxlint**                           | Lint `src/`                                        | Local, pre-commit, CI                      |
+| **TypeScript** (`tsc --noEmit`)      | Typecheck                                          | Local, pre-commit, CI                      |
+| **knip**                             | Unused files, exports, deps (`app/knip.json`)      | Local, CI                                  |
+| **Vitest** + Testing Library         | Unit / component tests                             | Local, CI                                  |
+| **Vite** build                       | Production bundle                                  | Local, CI (required before deploy)         |
+| **Husky** + **lint-staged**          | Pre-commit: Prettier → format check → oxlint → tsc | Staged `app/` / `docs/` changes            |
+| **CodeQL**                           | Security analysis                                  | Push/PR + weekly                           |
+| **Lighthouse CI**                    | Perf / a11y / SEO (`app/lighthouserc.cjs`)         | Weekly + manual; a11y hard-fails below 0.9 |
+| **Playwright**                       | Docs/README screenshots (`pnpm record:docs-media`) | Manual / weekly derived sync               |
+
+```bash
+cd app
+pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip && pnpm test && pnpm build
+```
+
+---
+
+## Why this instead of `npm create vite`?
+
+Vite gives you a blank app. This template gives you the **site + hosting + docs + CI** baseline so day one is product work, not plumbing:
+
+| You get                                               | So you don't have to                               |
+| ----------------------------------------------------- | -------------------------------------------------- |
+| Pages deploy on `main` via Wrangler                   | Hand-roll GitHub Actions + tokens                  |
+| Pulumi for the Pages project + optional custom domain | Click-ops DNS and project settings                 |
+| Docs in git, browsable in the app                     | Bolt on a separate docs site later                 |
+| Prettier, oxlint, Vitest, knip, Husky, CodeQL         | Debate the toolchain on day one                    |
+| Changelog + Lighthouse workflows                      | Discover gaps after the first launch               |
+| `bin/init-project.sh` for name, slug, origin          | Search-replace `react-cloudflare-template` by hand |
+
+---
 
 ## Nothing → live site
 
-1. **Create from template** and clone.
-2. **Local app**
+1. **Create** from the template and clone.
+2. **Brand it** — slug, display name, description, public origin:
+
+   ```bash
+   bin/init-project.sh --name "My App" --slug my-app \
+     --description "My app on Cloudflare Pages" \
+     --origin https://my-app.example.com
+   ```
+
+3. **Run locally**
 
    ```bash
    bin/setup-dev-env.sh
-   pnpm dev
+   cd app && pnpm dev
    ```
 
-3. **Rename the Pages project** in `wrangler.toml` (and plan your `PAGES_PROJECT_NAME`).
 4. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain):
 
    ```bash
@@ -49,18 +140,32 @@ cd my-app
 6. **Deploy** — push to `main`; CI builds and runs `wrangler pages deploy`.
 7. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom domain after DNS/NS are active).
 
-See [docs/setup.md](docs/setup.md) for details.
+`bin/init-project.sh` updates `app/src/siteConfig.ts`, `wrangler.toml`, package names, HTML title/description, and the CI Pages fallback. Re-run with `--force` to change again.
+
+Full detail: [docs/setup.md](docs/setup.md) · [docs/quality.md](docs/quality.md) · secrets: [docs/cloudflare-secrets.md](docs/cloudflare-secrets.md) · architecture: [docs/architecture.md](docs/architecture.md)
+
+---
 
 ## Scripts
 
-| Command                    | Purpose                                     |
-| -------------------------- | ------------------------------------------- |
-| `pnpm dev`                 | Dev server                                  |
-| `pnpm test` / `pnpm build` | Unit tests / production build               |
-| `pnpm test:lighthouse`     | Lighthouse CI (after build)                 |
-| `pnpm record:docs-media`   | Capture docs screenshots                    |
-| `bin/sync-derived.sh`      | Changelog + docs media; commit when changed |
+| Command                              | Purpose                                     |
+| ------------------------------------ | ------------------------------------------- |
+| `bin/init-project.sh --name …`       | Customize slug, brand, description, origin  |
+| `cd app && pnpm dev`                 | Dev server                                  |
+| `cd app && pnpm knip`                | Unused files / exports / deps               |
+| `cd app && pnpm test` / `pnpm build` | Unit tests / production build               |
+| `cd app && pnpm test:lighthouse`     | Lighthouse CI (after build)                 |
+| `cd app && pnpm record:docs-media`   | Capture docs screenshots                    |
+| `bin/sync-derived.sh`                | Changelog + docs media; commit when changed |
 
-## Styling policy
+---
 
-Tailwind is wired via `@tailwindcss/vite`. The starter UI is intentionally unstyled beyond document structure — add your own utilities or design system in the generated project.
+## Styling
+
+The starter ships a light Tailwind look (Syne + Source Sans 3, coastal-ink tokens in `app/src/index.css`). Treat it as a demo shell — rebrand colors and type for your product once the plumbing is yours.
+
+---
+
+## Who it's for
+
+Side projects, internal tools, and product MVPs that should look and behave like they belong in production from the first push — especially if Cloudflare Pages is already your hosting default.

@@ -18,8 +18,8 @@ Or merge to `main` — `.github/workflows/pulumi-cloudflare.yml` previews, then 
 
 ## Related
 
-| Path                       | Purpose                            |
-| -------------------------- | ---------------------------------- |
-| `wrangler.toml`            | Pages project name + `dist` output |
-| `public/_redirects`        | SPA routing                        |
-| `.github/workflows/ci.yml` | Build + wrangler deploy            |
+| Path                       | Purpose                                   |
+| -------------------------- | ----------------------------------------- |
+| `wrangler.toml`            | Pages project name + `app/dist` output    |
+| `app/public/_redirects`    | SPA routing                               |
+| `.github/workflows/ci.yml` | Build + wrangler deploy                   |

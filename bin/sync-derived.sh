@@ -18,10 +18,10 @@ fi
 node bin/changelog-render.mjs
 
 if [[ "${SKIP_DOCS_MEDIA:-}" != "1" ]]; then
-  pnpm record:docs-media
+  (cd app && pnpm record:docs-media)
 fi
 
-pnpm format
+(cd app && pnpm format)
 
 git add CHANGELOG.md docs/screenshots/
 

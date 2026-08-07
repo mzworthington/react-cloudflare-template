@@ -8,23 +8,38 @@
 ## Quick start
 
 ```bash
+bin/init-project.sh --name "My App" --slug my-app \
+  --description "My app on Cloudflare Pages" \
+  --origin https://my-app.example.com
 bin/setup-dev-env.sh
-pnpm dev
+cd app && pnpm dev
 ```
 
 Open [http://localhost:5173](http://localhost:5173).
 
+App sources and the pnpm workspace live under `app/`. Repo docs stay in `docs/` and are imported by the in-app viewer. Product identity lives in `app/src/siteConfig.ts` (written by `bin/init-project.sh`).
+
 ## Quality checks
 
+Named tools (see [Quality](./quality.md)): **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, plus **CodeQL** and **Lighthouse CI** in GitHub Actions.
+
 ```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
-pnpm test
-pnpm build
+cd app
+pnpm format:check   # Prettier
+pnpm lint           # oxlint
+pnpm typecheck      # TypeScript
+pnpm knip           # unused code / deps
+pnpm test           # Vitest
+pnpm build          # production build
 ```
 
-Pre-commit (Husky + lint-staged) runs format, lint, and typecheck on staged changes.
+**Pre-commit:** Husky runs lint-staged (Prettier), then format:check, oxlint, and typecheck on staged `app/` / `docs/` changes. After a UI change, optionally:
+
+```bash
+cd app
+pnpm build && pnpm test:lighthouse
+pnpm record:docs-media   # Playwright screenshots for the README
+```
 
 ## Cloudflare hosting
 

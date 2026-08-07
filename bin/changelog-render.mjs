@@ -5,7 +5,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
-const gitCliff = join(root, 'node_modules/.bin/git-cliff');
+const gitCliff = join(root, 'app/node_modules/.bin/git-cliff');
 
 const releases = JSON.parse(
   execFileSync(gitCliff, ['-c', join(root, 'cliff.toml'), '-x'], {

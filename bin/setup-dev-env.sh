@@ -17,7 +17,7 @@ mise install node pnpm
 # Marker for shells that source activation once.
 # react-cloudflare-template mise activation
 
-pnpm install
+(cd app && CI=true pnpm install)
 
 ensure_lifecycle_kit() {
   if [[ "${SKIP_LIFECYCLE_KIT:-}" == "1" ]]; then
@@ -41,4 +41,4 @@ ensure_lifecycle_kit() {
 
 ensure_lifecycle_kit
 
-echo "Dev environment ready. Run: pnpm dev"
+echo "Dev environment ready. Run: cd app && pnpm dev"

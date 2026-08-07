@@ -3,7 +3,7 @@
   "terminals": [
     {
       "name": "dev",
-      "command": "pnpm dev"
+      "command": "cd app && pnpm dev"
     }
   ]
 }

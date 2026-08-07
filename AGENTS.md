@@ -17,7 +17,8 @@ Before starting work, read:
 
 ## Project notes
 
-- Tailwind is installed; **do not add a custom theme or design system** in this template — consumers own styling.
+- App code and pnpm workspace live under `app/` — run `cd app && pnpm …`.
+- Tailwind starter UI ships with CSS tokens in `app/src/index.css`; rebrand for your product.
 - Docs are Markdown under `docs/`, rendered in-app (not a separate docs framework).
 - Hosting is Cloudflare Pages via Pulumi + Wrangler (no R2/catalog).
-- Before handover: run pre-commit checks (`pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`).
+- Before handover: run pre-commit checks (`cd app && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`).

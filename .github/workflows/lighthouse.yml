@@ -15,6 +15,9 @@ concurrency:
 jobs:
   lighthouse:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
     steps:
       - uses: actions/checkout@v7
 
@@ -24,7 +27,7 @@ jobs:
           version: 11.20.0
           runtime: node@26.7.0
           cache: true
-          cache-dependency-path: pnpm-lock.yaml
+          cache-dependency-path: app/pnpm-lock.yaml
 
       - name: Build
         run: pnpm build
@@ -41,5 +44,5 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: lighthouse-report
-          path: lighthouse-report/
+          path: app/lighthouse-report/
           retention-days: 30
