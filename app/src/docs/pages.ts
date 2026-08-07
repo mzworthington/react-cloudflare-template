@@ -1,4 +1,5 @@
 import architecture from '../../../docs/architecture.md?raw';
+import customDomains from '../../../docs/custom-domains.md?raw';
 import overview from '../../../docs/overview.md?raw';
 import quality from '../../../docs/quality.md?raw';
 import setup from '../../../docs/setup.md?raw';
@@ -18,6 +19,7 @@ export const DOC_PAGES: DocPage[] = [
   { slug: 'workflows', title: 'Workflows', markdown: workflows },
   { slug: 'quality', title: 'Quality', markdown: quality },
   { slug: 'setup', title: 'Setup', markdown: setup },
+  { slug: 'custom-domains', title: 'Custom domains', markdown: customDomains },
   { slug: 'tech-stack', title: 'Tech stack', markdown: techStack },
   { slug: 'architecture', title: 'Architecture', markdown: architecture },
   { slug: 'adrs', title: 'ADRs', markdown: adrIndex },

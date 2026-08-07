@@ -124,25 +124,23 @@ Vite gives you a blank app. This template gives you the **site + hosting + docs 
    cd app && pnpm dev
    ```
 
-4. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain):
+4. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain).
+   Hostnames and tokens stay out of the template — use local `.env` or GitHub vars.
+   Full walkthrough: [docs/custom-domains.md](docs/custom-domains.md).
 
    ```bash
-   # With Bitwarden Secrets Manager:
-   export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
-   # Or export CLOUDFLARE_API_TOKEN (and optionally ACCOUNT_ID / ZONE_ID) directly.
-
-   DOMAIN=example.com WWW_DOMAIN=www.example.com \
-   PAGES_PROJECT_NAME=my-app PULUMI_STACK=prod \
+   cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, CLOUDFLARE_API_TOKEN, …
+   # Optional Bitwarden: export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
    bin/setup-cloudflare-hosting.sh
    ```
 
 5. **Apply infra** — `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.
 6. **Deploy** — push to `main`; CI builds and runs `wrangler pages deploy`.
-7. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom domain after DNS/NS are active).
+7. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom hostnames after DNS is active).
 
 `bin/init-project.sh` updates `app/src/siteConfig.ts`, `wrangler.toml`, package names, HTML title/description, and the CI Pages fallback. Re-run with `--force` to change again.
 
-Full detail: [docs/setup.md](docs/setup.md) · [docs/quality.md](docs/quality.md) · secrets: [docs/cloudflare-secrets.md](docs/cloudflare-secrets.md) · architecture: [docs/architecture.md](docs/architecture.md)
+Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/custom-domains.md) · [docs/quality.md](docs/quality.md) · secrets: [docs/cloudflare-secrets.md](docs/cloudflare-secrets.md) · architecture: [docs/architecture.md](docs/architecture.md)
 
 ---
 

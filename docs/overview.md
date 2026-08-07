@@ -2,14 +2,14 @@
 
 Everything below ships when you create from the template — not a backlog of “nice to haves.”
 
-| You get             | What it is                                                                                                                                                                                     |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Site**            | Vite + React + TypeScript SPA under `app/`, Tailwind starter UI, routing, and `bin/init-project.sh` for brand name, slug, and origin.                                                          |
-| **Hosting**         | Cloudflare Pages: Pulumi defines the project (+ optional custom domain), CI builds on `main`, Wrangler deploys `app/dist`. `*.pages.dev` works before DNS is ready.                            |
-| **Docs**            | Git-backed doc store: Markdown under `docs/` rendered in-app at `/docs` — no separate docs framework or object storage.                                                                        |
-| **CI & quality**    | Named toolchain: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged** pre-commit, plus **CodeQL** and **Lighthouse CI** — see [Quality](/docs/quality). |
-| **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), Lighthouse CI with report artifacts.                                                                                  |
-| **Agent-ready**     | Thin `AGENTS.md` → [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit).                                                                                                |
+| You get             | What it is                                                                                                                                                                                                      |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Site**            | Vite + React + TypeScript SPA under `app/`, Tailwind starter UI, routing, and `bin/init-project.sh` for brand name, slug, and origin.                                                                           |
+| **Hosting**         | Cloudflare Pages: Pulumi defines the project (+ optional custom domain), CI builds on `main`, Wrangler deploys `app/dist`. `*.pages.dev` works before DNS is ready. See [Custom domains](/docs/custom-domains). |
+| **Docs**            | Git-backed doc store: Markdown under `docs/` rendered in-app at `/docs` — no separate docs framework or object storage.                                                                                         |
+| **CI & quality**    | Named toolchain: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged** pre-commit, plus **CodeQL** and **Lighthouse CI** — see [Quality](/docs/quality).                  |
+| **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), Lighthouse CI with report artifacts.                                                                                                   |
+| **Agent-ready**     | Thin `AGENTS.md` → [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit).                                                                                                                 |
 
 ```text
 Browser  →  React site (+ /docs)  →  Cloudflare Pages
@@ -18,6 +18,4 @@ GitHub   →  CI quality gates → wrangler pages deploy
 Pulumi   →  Pages project + optional custom domain
 ```
 
-**Not included (on purpose):** R2 / catalog / object storage. This template stays a static Pages site + in-repo docs.
-
-Next: [Setup](/docs/setup) · [Quality](/docs/quality) · [Workflows](/docs/workflows) · [Architecture](/docs/architecture)
+Next: [Setup](/docs/setup) · [Custom domains](/docs/custom-domains) · [Quality](/docs/quality) · [Workflows](/docs/workflows) · [Architecture](/docs/architecture)

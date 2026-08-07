@@ -44,18 +44,10 @@ pnpm record:docs-media   # Playwright screenshots for the README
 ## Cloudflare hosting
 
 1. Create a Cloudflare API token (Pages Edit + Zone DNS Edit if using a custom domain).
-2. Bootstrap secrets and Pulumi config:
-
-   ```bash
-   export BWS_ACCESS_TOKEN=...   # or set secrets directly in GitHub
-   export BWS_PROJECT_ID=...
-   DOMAIN=example.com WWW_DOMAIN=www.example.com \
-   PAGES_PROJECT_NAME=my-app PULUMI_STACK=prod \
-   bin/setup-cloudflare-hosting.sh
-   ```
-
-3. Apply infra: `cd infra/cloudflare && pulumi up` (or merge to `main` for CI).
-4. Push to `main` — CI builds and runs `wrangler pages deploy`.
+2. Follow **[Custom domains](./custom-domains.md)** for hostname layouts (subdomain vs apex+www), `.env`, bootstrap, and verify steps.
+3. Secrets/var names: [cloudflare-secrets.md](./cloudflare-secrets.md).
+4. Apply infra: `cd infra/cloudflare && pulumi up` (or merge to `main` for CI).
+5. Push to `main` — CI builds and runs `wrangler pages deploy`.
 
 Without a custom domain, the site is available at `https://<PAGES_PROJECT_NAME>.pages.dev` after the first deploy.
 

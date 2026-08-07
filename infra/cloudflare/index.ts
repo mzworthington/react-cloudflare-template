@@ -5,8 +5,16 @@ const config = new pulumi.Config();
 const accountId = config.require('accountId');
 const zoneId = config.require('zoneId');
 const pagesProjectName = config.require('pagesProjectName');
-const apexDomain = config.require('apexDomain');
-const wwwDomain = config.require('wwwDomain');
+
+/** Hostnames attached to the Pages project (apex, www, or a subdomain). */
+function resolvePagesHostnames(): string[] {
+  const listed = config.getObject<string[]>('pagesHostnames');
+  if (listed && listed.length > 0) return listed;
+  // Backward-compatible apex + www mode.
+  return [config.require('apexDomain'), config.require('wwwDomain')];
+}
+
+const pagesHostnames = resolvePagesHostnames();
 
 const pagesProject = new cloudflare.PagesProject('site', {
   accountId,
@@ -14,56 +22,36 @@ const pagesProject = new cloudflare.PagesProject('site', {
   productionBranch: 'main',
 });
 
-const apexDns = new cloudflare.DnsRecord(
-  'apex-pages',
-  {
-    zoneId,
-    name: apexDomain,
-    type: 'CNAME',
-    content: pagesProject.subdomain,
-    proxied: true,
-    ttl: 1,
-    comment: 'Cloudflare Pages',
-  },
-  { deleteBeforeReplace: true },
-);
+for (const hostname of pagesHostnames) {
+  const safe = hostname.replace(/[^a-zA-Z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const dns = new cloudflare.DnsRecord(
+    `pages-dns-${safe}`,
+    {
+      zoneId,
+      name: hostname,
+      type: 'CNAME',
+      content: pagesProject.subdomain,
+      proxied: true,
+      ttl: 1,
+      comment: 'Cloudflare Pages',
+    },
+    { deleteBeforeReplace: true },
+  );
 
-const wwwDns = new cloudflare.DnsRecord(
-  'www-pages',
-  {
-    zoneId,
-    name: wwwDomain,
-    type: 'CNAME',
-    content: pagesProject.subdomain,
-    proxied: true,
-    ttl: 1,
-    comment: 'Cloudflare Pages',
-  },
-  { deleteBeforeReplace: true },
-);
-
-new cloudflare.PagesDomain(
-  'apex',
-  {
-    accountId,
-    projectName: pagesProject.name,
-    name: apexDomain,
-  },
-  { dependsOn: [apexDns] },
-);
-
-new cloudflare.PagesDomain(
-  'www',
-  {
-    accountId,
-    projectName: pagesProject.name,
-    name: wwwDomain,
-  },
-  { dependsOn: [wwwDns] },
-);
+  new cloudflare.PagesDomain(
+    `pages-domain-${safe}`,
+    {
+      accountId,
+      projectName: pagesProject.name,
+      name: hostname,
+    },
+    { dependsOn: [dns] },
+  );
+}
 
 const zone = cloudflare.getZoneOutput({ zoneId });
 
 export const pagesProjectNameOut = pagesProject.name;
 export const pagesSubdomain = pagesProject.subdomain;
+export const pagesHostnamesOut = pagesHostnames;
 export const zoneName = zone.name;

@@ -1,16 +1,14 @@
 # Cloudflare infrastructure (Pulumi)
 
-Pages project + optional apex/`www` custom domains. The SPA is built in CI and deployed with `wrangler pages deploy`.
+Pages project + custom hostnames (subdomain and/or apex/`www`). The SPA is built in CI and deployed with `wrangler pages deploy`.
+
+Real zone/hostname values live in gitignored `Pulumi.<stack>.yaml`, local `.env`, or GitHub Actions vars — see [Custom domains](../../docs/custom-domains.md) and [secrets checklist](../../docs/cloudflare-secrets.md).
 
 ## Quick setup
 
-See [docs/setup.md](../../docs/setup.md), then:
-
 ```bash
-DOMAIN=example.com WWW_DOMAIN=www.example.com \
-PAGES_PROJECT_NAME=my-app PULUMI_STACK=prod \
+cp ../../.env.example ../../.env   # edit DOMAIN, PAGES_HOSTNAMES, tokens
 ../../bin/setup-cloudflare-hosting.sh
-
 pulumi up
 ```
 

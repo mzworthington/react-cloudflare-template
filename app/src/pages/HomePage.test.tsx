@@ -1,11 +1,28 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import { SITE_NAME } from '../siteConfig';
+import { cleanup, render, screen } from '@testing-library/react';
+import { afterEach, describe, expect, it } from 'vitest';
+import { SITE_NAME, SITE_REPO_URL, SITE_TEMPLATE_REF } from '../siteConfig';
 import { HomePage } from './HomePage';
+
+afterEach(() => {
+  cleanup();
+});
 
 describe('HomePage', () => {
   it('renders the product name', () => {
     render(<HomePage />);
     expect(screen.getByRole('heading', { name: SITE_NAME })).toBeTruthy();
+  });
+
+  it('links to the GitHub repository', () => {
+    render(<HomePage />);
+    const link = screen.getByRole('link', { name: /view on github/i });
+    expect(link.getAttribute('href')).toBe(SITE_REPO_URL);
+  });
+
+  it('shows a gh template clone snippet', () => {
+    render(<HomePage />);
+    const snippet = screen.getByTestId('template-snippet');
+    expect(snippet.textContent).toContain(`--template ${SITE_TEMPLATE_REF}`);
+    expect(snippet.textContent).toContain('bin/init-project.sh');
   });
 });

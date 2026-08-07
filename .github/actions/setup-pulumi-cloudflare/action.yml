@@ -29,6 +29,7 @@ runs:
         CLOUDFLARE_ZONE_ID: ${{ env.CLOUDFLARE_ZONE_ID }}
         CLOUDFLARE_API_TOKEN: ${{ env.CLOUDFLARE_API_TOKEN }}
         PULUMI_PAGES_PROJECT_NAME: ${{ env.PULUMI_PAGES_PROJECT_NAME }}
+        PULUMI_PAGES_HOSTNAMES: ${{ env.PULUMI_PAGES_HOSTNAMES }}
         PULUMI_APEX_DOMAIN: ${{ env.PULUMI_APEX_DOMAIN }}
         PULUMI_WWW_DOMAIN: ${{ env.PULUMI_WWW_DOMAIN }}
       run: |
@@ -36,6 +37,10 @@ runs:
         pulumi config set accountId "$CLOUDFLARE_ACCOUNT_ID"
         pulumi config set zoneId "$CLOUDFLARE_ZONE_ID"
         pulumi config set pagesProjectName "${PULUMI_PAGES_PROJECT_NAME:?Set repository variable PULUMI_PAGES_PROJECT_NAME}"
-        pulumi config set apexDomain "${PULUMI_APEX_DOMAIN:?Set repository variable PULUMI_APEX_DOMAIN}"
-        pulumi config set wwwDomain "${PULUMI_WWW_DOMAIN:?Set repository variable PULUMI_WWW_DOMAIN}"
+        if [[ -n "${PULUMI_PAGES_HOSTNAMES:-}" ]]; then
+          pulumi config set pagesHostnames "$PULUMI_PAGES_HOSTNAMES" --plaintext
+        else
+          pulumi config set apexDomain "${PULUMI_APEX_DOMAIN:?Set PULUMI_PAGES_HOSTNAMES or PULUMI_APEX_DOMAIN}"
+          pulumi config set wwwDomain "${PULUMI_WWW_DOMAIN:?Set PULUMI_PAGES_HOSTNAMES or PULUMI_WWW_DOMAIN}"
+        fi
         pulumi config set --secret cloudflare:apiToken "$CLOUDFLARE_API_TOKEN"
