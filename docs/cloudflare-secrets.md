@@ -1,40 +1,35 @@
 # Cloudflare hosting: secrets checklist
 
-Companion to **[Custom domains](./custom-domains.md)** (subdomain hostnames and step-by-step). This page lists where secrets and vars live.
+Companion to **[Custom domains](./custom-domains.md)**. Shared CI/bootstrap tooling lives in [edge-dns](https://github.com/mzworthington/edge-dns) ([reusable Cloudflare CI](https://github.com/mzworthington/edge-dns/blob/main/docs/reusable-cloudflare-ci.md)). This repo keeps thin shims only.
 
-Real account IDs, zone IDs, API tokens, and hostnames belong in **local `.env`** (gitignored), **Bitwarden**, or **GitHub Actions secrets/vars**, never in committed template sources.
+Real account IDs, zone IDs, API tokens, and hostnames belong in **Bitwarden**, **GitHub Actions secrets/vars**, or a local `.env` — never in committed template sources.
 
 ## Bootstrap
 
-Copy [`.env.example`](../.env.example) → `.env`, fill in values for _your_ zone, then:
-
 ```bash
-# Optional: Bitwarden Secrets Manager instead of / alongside .env
 export BWS_ACCESS_TOKEN="..."
 export BWS_PROJECT_ID="..."
 
+# Site identity (or use a gitignored .env — see .env.example)
+export PULUMI_STACK=prod
+export DOMAIN=example.com
+export PAGES_HOSTNAMES=app.example.com
+export PAGES_PROJECT_NAME=my-app
+
 gh auth login
 pulumi login
-
-# With .env present, DOMAIN / PAGES_* can be omitted from the shell:
 bin/setup-cloudflare-hosting.sh
-
-# Or pass explicitly (no .env):
-# DOMAIN=example.com \
-# PAGES_HOSTNAMES=app.example.com \
-# PAGES_PROJECT_NAME=my-app \
-# PULUMI_STACK=prod \
-# CLOUDFLARE_API_TOKEN=... \
-# bin/setup-cloudflare-hosting.sh
 ```
+
+The shim downloads the canonical script from edge-dns (`EDGE_DNS_REF`, default `main`).
 
 Then `cd infra/cloudflare && pulumi up`, or merge to `main` for CI.
 
-Set public origin in the app with `bin/init-project.sh --origin https://app.example.com` (writes `SITE_ORIGIN` in `app/src/siteConfig.ts`; expected after fork/customize, not as template defaults).
+Set public origin in the app with `bin/init-project.sh --origin https://app.example.com`.
 
 ### Existing zone required
 
-The **zone** (`DOMAIN`) must already be active on Cloudflare. Bootstrap only attaches **subdomains** (CNAMEs) in that zone; it does not create zones or change registrar nameservers. `*.pages.dev` works without a custom domain.
+The **zone** (`DOMAIN`) must already be active on Cloudflare (managed in edge-dns). Bootstrap only attaches **subdomains** in that zone.
 
 ## Secrets / vars
 
@@ -47,7 +42,7 @@ The **zone** (`DOMAIN`) must already be active on Cloudflare. Bootstrap only att
 | `PULUMI_PAGES_PROJECT_NAME` | variable | Deploy + Pulumi      |
 | `PULUMI_PAGES_HOSTNAMES`    | variable | Pulumi (JSON array)  |
 
-Prefer a **dedicated BWS project** (or local `.env`) per site so product-specific IDs like `CLOUDFLARE_ZONE_ID` are not shared across zones. The bootstrap script always resolves the zone from `DOMAIN` and will warn if an injected zone id does not match.
+Prefer a **dedicated BWS project** per site. Bootstrap always resolves the zone from `DOMAIN`.
 
 ## API token scopes
 

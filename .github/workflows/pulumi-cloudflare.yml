@@ -1,20 +1,22 @@
 name: Pulumi Cloudflare
 
-# Flow: preview (always) → GitHub Environment approval on apply → pulumi up.
-# Create Environment "pulumi-prod" with required reviewers for the manual gate.
+# Thin caller — preview/apply live in edge-dns.
+# See: https://github.com/mzworthington/edge-dns/blob/main/docs/reusable-cloudflare-ci.md
+#
+# Create GitHub Environment "pulumi-prod" with required reviewers for the apply gate.
+# Secrets: CLOUDFLARE_ACCOUNT_ID, CLOUDFLARE_ZONE_ID, CLOUDFLARE_API_TOKEN, PULUMI_ACCESS_TOKEN
+# Vars:    PULUMI_PAGES_PROJECT_NAME, PULUMI_PAGES_HOSTNAMES (JSON array)
 
 on:
   pull_request:
     paths:
       - 'infra/cloudflare/**'
       - '.github/workflows/pulumi-cloudflare.yml'
-      - '.github/actions/setup-pulumi-cloudflare/**'
   push:
     branches: [main]
     paths:
       - 'infra/cloudflare/**'
       - '.github/workflows/pulumi-cloudflare.yml'
-      - '.github/actions/setup-pulumi-cloudflare/**'
   workflow_dispatch:
     inputs:
       apply:
@@ -27,63 +29,12 @@ permissions:
   pull-requests: write
   deployments: write
 
-concurrency:
-  group: pulumi-cloudflare-${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  preview:
-    name: Preview
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup Pulumi Cloudflare
-        uses: ./.github/actions/setup-pulumi-cloudflare
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          PULUMI_PAGES_PROJECT_NAME: ${{ vars.PULUMI_PAGES_PROJECT_NAME }}
-          PULUMI_PAGES_HOSTNAMES: ${{ vars.PULUMI_PAGES_HOSTNAMES }}
-
-      - name: Pulumi preview
-        uses: mzworthington/edge-dns/.github/actions/pulumi-rich-report@main
-        with:
-          command: preview
-          stack-name: prod
-          work-dir: infra/cloudflare
-          comment-on-pr: ${{ github.event_name == 'pull_request' }}
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-
-  apply:
-    name: Apply
-    if: >
-      github.ref == 'refs/heads/main' &&
-      (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.apply))
-    needs: [preview]
-    runs-on: ubuntu-latest
-    environment: pulumi-prod
-    steps:
-      - uses: actions/checkout@v7
-
-      - name: Setup Pulumi Cloudflare
-        uses: ./.github/actions/setup-pulumi-cloudflare
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          CLOUDFLARE_ZONE_ID: ${{ secrets.CLOUDFLARE_ZONE_ID }}
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          PULUMI_PAGES_PROJECT_NAME: ${{ vars.PULUMI_PAGES_PROJECT_NAME }}
-          PULUMI_PAGES_HOSTNAMES: ${{ vars.PULUMI_PAGES_HOSTNAMES }}
-
-      - name: Pulumi up
-        uses: mzworthington/edge-dns/.github/actions/pulumi-rich-report@main
-        with:
-          command: up
-          stack-name: prod
-          work-dir: infra/cloudflare
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+  pulumi:
+    uses: mzworthington/edge-dns/.github/workflows/product-pulumi-cloudflare.yml@main
+    with:
+      work-dir: infra/cloudflare
+      stack-name: prod
+      tooling-ref: main
+      apply: ${{ github.event_name != 'workflow_dispatch' || inputs.apply }}
+    secrets: inherit

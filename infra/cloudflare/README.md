@@ -21,12 +21,15 @@ pulumi import 'cloudflare:index/observatoryScheduledTest:ObservatoryScheduledTes
 ## Quick setup
 
 ```bash
-cp ../../.env.example ../../.env   # edit DOMAIN, PAGES_HOSTNAMES, tokens
+# Prefer BWS; or cp ../../.env.example ../../.env and edit DOMAIN / PAGES_*
+export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
+export DOMAIN=example.com PAGES_HOSTNAMES=app.example.com
+export PAGES_PROJECT_NAME=my-app PULUMI_STACK=prod
 ../../bin/setup-cloudflare-hosting.sh
 pulumi up
 ```
 
-Or merge to `main`. `.github/workflows/pulumi-cloudflare.yml` previews, then waits for **pulumi-prod** environment approval before `pulumi up`.
+Or merge to `main`. `.github/workflows/pulumi-cloudflare.yml` is a thin caller of the edge-dns reusable workflow (preview → **pulumi-prod** → `up`).
 
 ## Related
 
@@ -35,3 +38,4 @@ Or merge to `main`. `.github/workflows/pulumi-cloudflare.yml` previews, then wai
 | `wrangler.toml`            | Pages project name + `app/dist` output    |
 | `app/public/_redirects`    | SPA routing                               |
 | `.github/workflows/ci.yml` | Build + wrangler deploy                   |
+| `bin/setup-cloudflare-hosting.sh` | Thin shim → edge-dns bootstrap     |
