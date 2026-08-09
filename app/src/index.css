@@ -50,7 +50,11 @@
 
 @layer components {
   .site-shell {
-    @apply min-h-dvh;
+    @apply flex min-h-dvh flex-col;
+  }
+
+  .site-shell > main {
+    @apply flex-1;
   }
 
   .site-nav {
@@ -80,6 +84,18 @@
 
   .site-nav-link:hover::after {
     @apply w-full;
+  }
+
+  .site-footer {
+    @apply border-line/60 mt-auto border-t px-5 py-6 text-center sm:px-8;
+  }
+
+  .site-footer p {
+    @apply text-ink-muted font-mono text-xs tracking-wide;
+  }
+
+  .site-footer a {
+    @apply text-ink hover:text-accent underline-offset-4 transition-colors hover:underline;
   }
 
   .hero {

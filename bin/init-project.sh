@@ -218,6 +218,9 @@ export const SITE_ORIGIN = '{q(origin)}';
 export const SITE_REPO_URL = '{q(repo_url)}';
 /** Owner/name used in `gh repo create --template …`. */
 export const SITE_TEMPLATE_REF = '{q(template_ref)}';
+/** Author credit shown in the site footer. */
+export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
+export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
 export function templateCloneSnippet(appSlug = 'my-app'): string {{
   return [

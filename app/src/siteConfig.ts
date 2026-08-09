@@ -11,6 +11,9 @@ export const SITE_ORIGIN = 'https://example.com';
 export const SITE_REPO_URL = 'https://github.com/mzworthington/react-cloudflare-template';
 /** Owner/name used in `gh repo create --template …`. */
 export const SITE_TEMPLATE_REF = 'mzworthington/react-cloudflare-template';
+/** Author credit shown in the site footer. */
+export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
+export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
 export function templateCloneSnippet(appSlug = 'my-app'): string {
   return [

@@ -1,5 +1,6 @@
 import { Route, Switch } from 'wouter';
 import { BrandMark } from './components/BrandMark';
+import { SiteFooter } from './components/SiteFooter';
 import { SITE_NAME } from './siteConfig';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 import { DocsPage } from './pages/DocsPage';
@@ -44,6 +45,7 @@ export function App() {
           </Route>
         </Switch>
       </main>
+      <SiteFooter />
     </div>
   );
 }
