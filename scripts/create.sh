@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
 # Create a new GitHub repo from this template, then brand it (interactive prompts).
 #
-# Usage (ArchLens-style one-liner):
-#   curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+# Usage (ArchLens-style one-liner; trailing cd enters the new clone):
+#   curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"
 #
 # Prefer `| bash` (not `| sh`): needs bash features such as `pipefail`.
 # Prompts read from /dev/tty so they work when the script is piped from curl.
-#
+# gh calls use </dev/null so they cannot consume the remainder of a piped script.
 # Non-interactive:
 #   curl -fsSL …/create.sh | bash -s -- --name "My App" --slug my-app \
 #     --description "…" --topics "react,cloudflare,typescript"
 if [ -z "${BASH_VERSION:-}" ]; then
   echo "error: run this script with bash, e.g.:" >&2
-  echo "  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash" >&2
+  echo "  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd \"\$(cat \"\${TMPDIR:-/tmp}/react-cloudflare-template-last-dir\")\"" >&2
   exit 1
 fi
 set -euo pipefail
 
+LAST_DIR_FILE="${TMPDIR:-/tmp}/react-cloudflare-template-last-dir"
 TEMPLATE_REF="${TEMPLATE_REF:-mzworthington/react-cloudflare-template}"
 NAME=""
 SLUG=""
@@ -174,13 +175,24 @@ if ((${#topic_args[@]} > 0)); then
   echo "   topics:      ${TOPICS}"
 fi
 
-gh repo create "${create_args[@]}"
+gh repo create "${create_args[@]}" </dev/null
+
+if [[ ! -d "$SLUG" ]]; then
+  echo "✗ Expected clone directory ./${SLUG} was not created in $(pwd)" >&2
+  exit 1
+fi
 
 cd "$SLUG"
+PROJECT_DIR="$(pwd)"
+# So the homepage one-liner can `cd` after curl|bash (child shell cannot change parent cwd).
+printf '%s\n' "$PROJECT_DIR" >"$LAST_DIR_FILE"
+
+# Fresh clones can lack +x depending on umask/FS; invoke via bash and repair bits.
+chmod +x bin/*.sh scripts/*.sh 2>/dev/null || true
 
 if ((${#topic_args[@]} > 0)); then
   echo "→ Setting repository topics"
-  gh repo edit "${topic_args[@]}"
+  gh repo edit "${topic_args[@]}" </dev/null
 fi
 
 init_args=(--name "$NAME" --slug "$SLUG")
@@ -188,7 +200,22 @@ init_args=(--name "$NAME" --slug "$SLUG")
 [[ -n "$TAGLINE" ]] && init_args+=(--tagline "$TAGLINE")
 [[ -n "$ORIGIN" ]] && init_args+=(--origin "$ORIGIN")
 
-bin/init-project.sh "${init_args[@]}"
+bash bin/init-project.sh "${init_args[@]}"
+
+finish_msg() {
+  echo
+  echo "✓ Project ready at:"
+  echo "    ${PROJECT_DIR}"
+  echo
+  echo "Your shell is still in the previous directory (curl|bash cannot cd for you)."
+  echo "Enter the project with:"
+  echo "    cd \"${PROJECT_DIR}\""
+  echo "    # or: cd \"\$(cat \"${LAST_DIR_FILE}\")\""
+  echo
+  echo "Then:"
+  echo "    bin/setup-dev-env.sh   # if you skipped it"
+  echo "    cd app && pnpm dev"
+}
 
 if [[ "$SKIP_DEV_ENV" != "1" ]]; then
   if [[ -e /dev/tty && -z "${CI:-}" ]]; then
@@ -196,17 +223,11 @@ if [[ "$SKIP_DEV_ENV" != "1" ]]; then
     read -r -p "Run bin/setup-dev-env.sh now? [Y/n]: " reply </dev/tty || true
     reply="${reply:-Y}"
     if [[ "$reply" =~ ^[Yy]$ ]]; then
-      bin/setup-dev-env.sh
-      echo
-      echo "✓ Ready. Start the app:"
-      echo "    cd ${SLUG} && cd app && pnpm dev"
+      bash bin/setup-dev-env.sh
+      finish_msg
       exit 0
     fi
   fi
 fi
 
-echo
-echo "Next:"
-echo "  cd ${SLUG}"
-echo "  bin/setup-dev-env.sh"
-echo "  cd app && pnpm dev"
+finish_msg

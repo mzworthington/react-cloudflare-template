@@ -7,10 +7,10 @@ A GitHub template for a **React + TypeScript + Tailwind** SPA on **Cloudflare Pa
 ![Home: React Cloudflare Template](docs/screenshots/home.png)
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"
 ```
 
-Prompts for name/slug, creates the GitHub repo from this template, brands it, and can run `bin/setup-dev-env.sh`. Prefer `| bash` (not `| sh`).
+Prompts for name/slug, creates the GitHub repo from this template, brands it, and can run `bin/setup-dev-env.sh`. Prefer `| bash` (not `| sh`). The trailing `cd` enters the new clone (a piped script cannot change your shell’s directory by itself).
 
 Or click **Use this template** on GitHub, then:
 
@@ -115,7 +115,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
 1. **Create** from the template (prompts for name/slug):
 
    ```bash
-   curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+   curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"
    ```
 
    Or click **Use this template** on GitHub, clone, then brand:

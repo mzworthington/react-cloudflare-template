@@ -9,7 +9,7 @@
 
 ```bash
 # Greenfield: prompts for name/slug, creates the repo, brands it
-curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"
 
 # Already cloned from “Use this template”:
 bin/init-project.sh   # prompts; or --name / --slug / --origin

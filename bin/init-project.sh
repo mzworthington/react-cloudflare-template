@@ -50,7 +50,7 @@ Usage:
     --origin https://acme.example.com
 
 Greenfield (create GitHub repo from template + brand):
-  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"
 
 Options:
   --name          Display / brand name (prompted if omitted on a TTY)
@@ -257,9 +257,10 @@ export const SITE_TEMPLATE_REF = '{q(template_ref)}';
 export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
 export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
-/** One-line create script (prompts for name/slug). Prefer `| bash` (not `| sh`). */
+/** One-line create script (prompts for name/slug). Prefer `| bash` (not `| sh`).
+ *  Trailing `cd` uses the path the script wrote after a successful create. */
 export const SITE_CREATE_COMMAND =
-  'curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash';
+  'curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"';
 
 /** @deprecated Prefer SITE_CREATE_COMMAND. */
 export function templateCloneSnippet(): string {{
