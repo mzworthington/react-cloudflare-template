@@ -10,9 +10,9 @@
 | Package manager | pnpm 11 (`app/package.json`)                                                                     |
 | Toolchain       | Mise                                                                                             |
 | Tests           | Vitest + Testing Library                                                                         |
-| Unused code     | knip                                                                                             |
+| Unused code     | knip (fail unused exports/types; minimal ignores)                                                |
 | Lint / format   | oxlint + Prettier                                                                                |
-| Security        | CodeQL                                                                                           |
+| Security        | CodeQL (JS/TS + Actions) + Dependabot                                                            |
 | Perf / a11y     | Lighthouse CI (`app/lighthouserc.cjs`)                                                           |
 | Hosting         | Cloudflare Pages (Wrangler deploy)                                                               |
 | IaC             | Pulumi (`infra/cloudflare`)                                                                      |

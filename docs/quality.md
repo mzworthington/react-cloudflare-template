@@ -4,18 +4,19 @@ The template ships a full local + CI quality toolchain, not “add Prettier late
 
 **In the box by name:**
 
-| Tool                             | Role                                                                                    |
-| -------------------------------- | --------------------------------------------------------------------------------------- |
-| **Prettier**                     | Opinionated formatting (incl. Tailwind class sorting via `prettier-plugin-tailwindcss`) |
-| **oxlint**                       | Fast lint for `src/`                                                                    |
-| **TypeScript**                   | Strict `tsc --noEmit` typecheck                                                         |
-| **knip**                         | Unused files, exports, and dependencies (`app/knip.json`)                               |
-| **Vitest** + **Testing Library** | Unit / component tests                                                                  |
-| **Husky**                        | Git hooks (`.husky/pre-commit`)                                                         |
-| **lint-staged**                  | Prettier on staged files before the full pre-commit suite                               |
-| **CodeQL**                       | GitHub security analysis for JS/TS                                                      |
-| **Lighthouse CI**                | Perf / a11y / SEO gates (`app/lighthouserc.cjs`)                                        |
-| **Playwright**                   | Docs/README screenshot capture (`pnpm record:docs-media`)                               |
+| Tool                             | Role                                                                                      |
+| -------------------------------- | ----------------------------------------------------------------------------------------- |
+| **Prettier**                     | Opinionated formatting (incl. Tailwind class sorting via `prettier-plugin-tailwindcss`)   |
+| **oxlint**                       | Fast lint for `src/`                                                                      |
+| **TypeScript**                   | Strict `tsc --noEmit` typecheck                                                           |
+| **knip**                         | Unused files, exports, types, and dependencies (`app/knip.json`; same policy as ArchLens) |
+| **Vitest** + **Testing Library** | Unit / component tests                                                                    |
+| **Husky**                        | Git hooks (`.husky/pre-commit`)                                                           |
+| **lint-staged**                  | Prettier on staged files before the full pre-commit suite                                 |
+| **CodeQL**                       | GitHub security analysis for JS/TS + Actions workflows                                    |
+| **Dependabot**                   | Weekly npm (`app/`, `infra/cloudflare/`) and GitHub Actions update PRs                    |
+| **Lighthouse CI**                | Perf / a11y / SEO gates (`app/lighthouserc.cjs`)                                          |
+| **Playwright**                   | Docs/README screenshot capture (`pnpm record:docs-media`)                                 |
 
 Quality is layered so problems fail early: on your laptop, on every PR, and on a weekly schedule for slower checks.
 
@@ -28,7 +29,7 @@ Run from `app/`:
 | `pnpm format` / `pnpm format:check` | **Prettier**                    | Style drift across app, docs, and workflows |
 | `pnpm lint`                         | **oxlint**                      | Obvious bugs and smell in `src/`            |
 | `pnpm typecheck`                    | **TypeScript** (`tsc --noEmit`) | Type errors before runtime                  |
-| `pnpm knip`                         | **knip**                        | Unused files, exports, and dependencies     |
+| `pnpm knip`                         | **knip**                        | Unused files, exports, types, and deps      |
 | `pnpm test`                         | **Vitest** + Testing Library    | Unit / component regressions                |
 | `pnpm build`                        | `tsc` + Vite                    | Production bundle breaks                    |
 
@@ -44,20 +45,37 @@ On relevant staged files (`app/`, `docs/`, or common source extensions), `.husky
 1. **lint-staged**: **Prettier** `--write` on staged paths
 2. **`pnpm format:check`**: full Prettier scope (app + root docs / GitHub YAML)
 3. **`pnpm lint`** (**oxlint**) + **`pnpm typecheck`** (**TypeScript**)
+4. **`pnpm knip`**: unused files, exports, types, and dependencies
 
-So formatting and type breaks rarely wait for CI. **knip** and **Vitest** still run in CI on every PR (and you can run them locally anytime).
+So formatting, type, and knip breaks rarely wait for CI. **Vitest** still runs in CI on every PR (and you can run it locally anytime).
+
+## knip policy
+
+Configured in `app/knip.json` to match the ArchLens approach: fail on unused **exports** and **types**, keep the ignore list tiny, and prefer wiring tools so knip can see them.
+
+| Setting                                                 | Intent                                                                            |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `rules.exports` / `rules.types` = `error`               | Dead public API fails the gate                                                    |
+| `ignoreExportsUsedInFile` for `interface` / `type` only | Same-file type aliases are fine; unused **value** exports are not                 |
+| `prettier: ["../.prettierrc"]` + CSS in `project`       | Discover `prettier-plugin-tailwindcss` and `tailwindcss` instead of ignoring them |
+| `ignoreDependencies: ["lint-staged"]`                   | Only husky config knip cannot resolve from scripts                                |
+| Package scripts `preview:pages` / `changelog:json`      | Keep `wrangler` and `git-cliff` as used binaries                                  |
+
+Do **not** paper over unused exports with knip ignores—delete them or import them from a real caller (app code or tests).
 
 ## CI (every PR / `main`)
 
 The **CI & Deployment** workflow runs the same local suite:
 
-`format:check` → `lint` → `typecheck` → **knip** → **test** → **build**
+`format:check` → `lint` → `typecheck` → **knip** (`--reporter github-actions`) → **test** → **build**
 
 Deploy to Pages only happens after those jobs succeed on `main`.
 
-## Security (CodeQL)
+## Security (CodeQL + Dependabot)
 
-**CodeQL** analyzes JavaScript/TypeScript on push/PR to `main` and on a weekly schedule. Findings show up in GitHub’s security view.
+**CodeQL** analyzes JavaScript/TypeScript (app + Pulumi) and GitHub Actions workflows on push/PR to `main` and on a weekly schedule. Findings show up in GitHub’s security view.
+
+**Dependabot** opens weekly PRs for npm deps under `app/` and `infra/cloudflare/`, plus Actions versions under `.github/`.
 
 ## Performance & a11y (Lighthouse CI)
 
@@ -79,14 +97,14 @@ Weekly workflow uploads the report artifact; locally: `pnpm build && pnpm test:l
 
 ## Why this mix
 
-| Tool                                       | Job                                                  |
-| ------------------------------------------ | ---------------------------------------------------- |
-| **Prettier** + **oxlint** + **TypeScript** | Fast feedback while editing                          |
-| **knip**                                   | Keep the fork lean (dead code / deps)                |
-| **Vitest**                                 | Protect behavior you care about                      |
-| **Husky** + **lint-staged**                | Don’t wait for CI for the cheap checks               |
-| **CodeQL**                                 | Security signal without a separate SaaS              |
-| **Lighthouse CI**                          | Catch a11y/SEO/perf regressions after the UI settles |
-| **Playwright**                             | Keep README screenshots honest                       |
+| Tool                                       | Job                                                            |
+| ------------------------------------------ | -------------------------------------------------------------- |
+| **Prettier** + **oxlint** + **TypeScript** | Fast feedback while editing                                    |
+| **knip**                                   | Fail on dead exports/types/deps (ArchLens-aligned)             |
+| **Vitest**                                 | Protect behavior you care about                                |
+| **Husky** + **lint-staged**                | Don’t wait for CI for the cheap checks                         |
+| **CodeQL** + **Dependabot**                | Security signal + dependency freshness without a separate SaaS |
+| **Lighthouse CI**                          | Catch a11y/SEO/perf regressions after the UI settles           |
+| **Playwright**                             | Keep README screenshots honest                                 |
 
 Next: [Workflows](/docs/workflows) · [Setup](/docs/setup) · [Tech stack](/docs/tech-stack)

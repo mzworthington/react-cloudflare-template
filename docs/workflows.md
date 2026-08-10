@@ -8,7 +8,7 @@ Five workflows ship in `.github/workflows/`: the automation most greenfield repo
 | **Pulumi Cloudflare** | `pulumi-cloudflare.yml` | Changes under `infra/cloudflare/**`, or manual | `pulumi preview` always; `pulumi up` only after **pulumi-prod** environment approval                              |
 | **Refresh derived**   | `refresh-derived.yml`   | Weekly (Sunday) + manual                       | Regenerates changelog + docs screenshots via `bin/sync-derived.sh` and commits when something changed             |
 | **Lighthouse**        | `lighthouse.yml`        | Weekly (Sunday) + manual                       | Builds the app, runs Lighthouse CI, uploads the report artifact                                                   |
-| **CodeQL**            | `codeql.yml`            | Push/PR to `main` + weekly                     | Security analysis for JavaScript/TypeScript                                                                       |
+| **CodeQL**            | `codeql.yml`            | Push/PR to `main` + weekly                     | Security analysis for JavaScript/TypeScript and Actions workflows                                                 |
 
 ```text
 PR / main ──► CI & Deployment ──► (main) Pages deploy

@@ -35,7 +35,7 @@ pnpm test           # Vitest
 pnpm build          # production build
 ```
 
-**Pre-commit:** Husky runs lint-staged (Prettier), then format:check, oxlint, and typecheck on staged `app/` / `docs/` changes. After a UI change, optionally:
+**Pre-commit:** Husky runs lint-staged (Prettier), then format:check, oxlint, typecheck, and knip on staged `app/` / `docs/` changes. After a UI change, optionally:
 
 ```bash
 cd app

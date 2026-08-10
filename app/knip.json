@@ -1,21 +1,15 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "entry": [
-    "src/main.tsx",
-    "vite.config.ts",
-    "vitest.config.ts",
-    "playwright.docs-media.config.ts",
-    "../bin/changelog-render.mjs",
-    "lighthouserc.cjs",
-    "scripts/writeLighthouseSummary.mjs"
-  ],
-  "project": ["src/**/*.{ts,tsx}", "scripts/**/*.mjs", "../bin/**/*.mjs"],
-  "ignoreDependencies": [
-    "tailwindcss",
-    "wrangler",
-    "git-cliff",
-    "@lhci/cli",
-    "lint-staged",
-    "prettier-plugin-tailwindcss"
-  ]
+  "rules": {
+    "exports": "error",
+    "types": "error"
+  },
+  "entry": ["../bin/changelog-render.mjs", "lighthouserc.cjs"],
+  "project": ["src/**/*.{ts,tsx,css}", "scripts/**/*.mjs", "../bin/**/*.mjs"],
+  "ignoreDependencies": ["lint-staged"],
+  "ignoreExportsUsedInFile": {
+    "interface": true,
+    "type": true
+  },
+  "prettier": ["../.prettierrc"]
 }

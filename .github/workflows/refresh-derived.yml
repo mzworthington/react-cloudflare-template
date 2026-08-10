@@ -35,7 +35,7 @@ jobs:
       - name: Setup pnpm + Node
         uses: pnpm/setup@v2
         with:
-          version: 11.20.0
+          version: 11.21.0
           runtime: node@26.7.0
           cache: true
           cache-dependency-path: app/pnpm-lock.yaml

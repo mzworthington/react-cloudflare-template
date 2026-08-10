@@ -9,28 +9,37 @@ on:
     - cron: '17 5 * * 1'
 
 permissions:
+  actions: read
   contents: read
+  packages: read
   security-events: write
 
 jobs:
   analyze:
+    name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        language: [javascript-typescript]
+        include:
+          # App + Pulumi (infra/cloudflare/*.ts) share the JS/TS extractor.
+          - language: javascript-typescript
+            build-mode: none
+          # Workflow YAML under .github/
+          - language: actions
+            build-mode: none
+
     steps:
-      - uses: actions/checkout@v7
+      - name: Checkout repository
+        uses: actions/checkout@v7
 
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v4
         with:
           languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
 
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
-
-      - name: Analyze
+      - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
         with:
           category: '/language:${{ matrix.language }}'

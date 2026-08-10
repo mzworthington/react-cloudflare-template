@@ -252,13 +252,7 @@ export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
 /** One-line create script (prompts for name/slug). Prefer `| bash` (not `| sh`).
  *  Trailing `cd` uses the path the script wrote after a successful create. */
-export const SITE_CREATE_COMMAND =
-  'curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd "$(cat "${TMPDIR:-/tmp}/react-cloudflare-template-last-dir")"';
-
-/** @deprecated Prefer SITE_CREATE_COMMAND. */
-export function templateCloneSnippet(): string {{
-  return SITE_CREATE_COMMAND;
-}}
+export const SITE_CREATE_COMMAND = `curl -fsSL https://raw.githubusercontent.com/${{SITE_TEMPLATE_REF}}/main/scripts/create.sh | bash && cd "$(cat "\\${{TMPDIR:-/tmp}}/react-cloudflare-template-last-dir")"`;
 
 /** Short hosting teaser; full walkthrough lives in docs/custom-domains. */
 export function hostingBootstrapSnippet(): string {{

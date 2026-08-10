@@ -59,7 +59,7 @@ Five workflows ship in `.github/workflows/`: the automation most greenfield repo
 | **Pulumi Cloudflare** | [`pulumi-cloudflare.yml`](.github/workflows/pulumi-cloudflare.yml) | Changes under `infra/cloudflare/**`, or manual | `pulumi preview` always; `pulumi up` only after **pulumi-prod** environment approval                              |
 | **Refresh derived**   | [`refresh-derived.yml`](.github/workflows/refresh-derived.yml)     | Weekly (Sunday) + manual                       | Regenerates changelog + docs screenshots via `bin/sync-derived.sh` and commits when something changed             |
 | **Lighthouse**        | [`lighthouse.yml`](.github/workflows/lighthouse.yml)               | Weekly (Sunday) + manual                       | Builds the app, runs Lighthouse CI, uploads the report artifact                                                   |
-| **CodeQL**            | [`codeql.yml`](.github/workflows/codeql.yml)                       | Push/PR to `main` + weekly                     | Security analysis for JavaScript/TypeScript                                                                       |
+| **CodeQL**            | [`codeql.yml`](.github/workflows/codeql.yml)                       | Push/PR to `main` + weekly                     | Security analysis for JavaScript/TypeScript and Actions workflows                                                 |
 
 ```text
 PR / main ──► CI & Deployment ──► (main) Pages deploy
@@ -75,18 +75,19 @@ push/PR   ──► CodeQL
 
 Same idea as the in-app [Quality](docs/quality.md) doc: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** / **lint-staged**, **CodeQL**, and **Lighthouse CI**: fail fast locally, enforce on every PR, schedule the heavier checks.
 
-| Tool                                 | What it does                                       | When                                       |
-| ------------------------------------ | -------------------------------------------------- | ------------------------------------------ |
-| **Prettier** (+ Tailwind class sort) | Format app, docs, and workflow YAML                | Local, lint-staged, CI                     |
-| **oxlint**                           | Lint `src/`                                        | Local, pre-commit, CI                      |
-| **TypeScript** (`tsc --noEmit`)      | Typecheck                                          | Local, pre-commit, CI                      |
-| **knip**                             | Unused files, exports, deps (`app/knip.json`)      | Local, CI                                  |
-| **Vitest** + Testing Library         | Unit / component tests                             | Local, CI                                  |
-| **Vite** build                       | Production bundle                                  | Local, CI (required before deploy)         |
-| **Husky** + **lint-staged**          | Pre-commit: Prettier → format check → oxlint → tsc | Staged `app/` / `docs/` changes            |
-| **CodeQL**                           | Security analysis                                  | Push/PR + weekly                           |
-| **Lighthouse CI**                    | Perf / a11y / SEO (`app/lighthouserc.cjs`)         | Weekly + manual; a11y hard-fails below 0.9 |
-| **Playwright**                       | Docs/README screenshots (`pnpm record:docs-media`) | Manual / weekly derived sync               |
+| Tool                                 | What it does                                              | When                                       |
+| ------------------------------------ | --------------------------------------------------------- | ------------------------------------------ |
+| **Prettier** (+ Tailwind class sort) | Format app, docs, and workflow YAML                       | Local, lint-staged, CI                     |
+| **oxlint**                           | Lint `src/`                                               | Local, pre-commit, CI                      |
+| **TypeScript** (`tsc --noEmit`)      | Typecheck                                                 | Local, pre-commit, CI                      |
+| **knip**                             | Unused files, exports, types, deps (ArchLens-aligned)     | Local, pre-commit, CI                      |
+| **Vitest** + Testing Library         | Unit / component tests                                    | Local, CI                                  |
+| **Vite** build                       | Production bundle                                         | Local, CI (required before deploy)         |
+| **Husky** + **lint-staged**          | Pre-commit: Prettier → format check → oxlint → tsc → knip | Staged `app/` / `docs/` changes            |
+| **CodeQL**                           | Security analysis (JS/TS + Actions)                       | Push/PR + weekly                           |
+| **Dependabot**                       | npm + Actions update PRs                                  | Weekly (Sunday)                            |
+| **Lighthouse CI**                    | Perf / a11y / SEO (`app/lighthouserc.cjs`)                | Weekly + manual; a11y hard-fails below 0.9 |
+| **Playwright**                       | Docs/README screenshots (`pnpm record:docs-media`)        | Manual / weekly derived sync               |
 
 ```bash
 cd app

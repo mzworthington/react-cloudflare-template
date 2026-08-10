@@ -1,7 +1,7 @@
 {
   "name": "react-cloudflare-template-infra",
   "private": true,
-  "packageManager": "pnpm@11.20.0",
+  "packageManager": "pnpm@11.21.0",
   "main": "index.ts",
   "scripts": {
     "typecheck": "tsc --noEmit"
@@ -11,7 +11,7 @@
     "@pulumi/pulumi": "3.256.0"
   },
   "devDependencies": {
-    "@types/node": "22.19.1",
+    "@types/node": "22.20.1",
     "typescript": "5.9.3"
   }
 }

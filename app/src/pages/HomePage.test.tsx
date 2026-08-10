@@ -1,6 +1,6 @@
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SITE_CREATE_COMMAND, SITE_NAME, SITE_REPO_URL } from '../siteConfig';
+import { SITE_CREATE_COMMAND, SITE_NAME, SITE_REPO_URL, SITE_TEMPLATE_REF } from '../siteConfig';
 import { HomePage } from './HomePage';
 
 afterEach(() => {
@@ -25,6 +25,7 @@ describe('HomePage', () => {
     const snippet = screen.getByTestId('template-snippet');
     expect(snippet.textContent).toContain(SITE_CREATE_COMMAND);
     expect(snippet.textContent).toContain('scripts/create.sh');
+    expect(SITE_CREATE_COMMAND).toContain(SITE_TEMPLATE_REF);
   });
 
   it('copies the create command when the copy button is clicked', async () => {

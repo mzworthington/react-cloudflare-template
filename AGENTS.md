@@ -21,4 +21,4 @@ Before starting work, read:
 - Tailwind coastal-ink UI: tokens + recipes in `app/src/index.css`, showcase at `/design-system`, assets in `design-pack/`; rebrand for your product.
 - Docs are Markdown under `docs/`, rendered in-app (not a separate docs framework).
 - Hosting is Cloudflare Pages via Pulumi + Wrangler (no R2/catalog).
-- Before handover: run pre-commit checks (`cd app && pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm build`).
+- Before handover: run pre-commit checks (`cd app && pnpm format:check && pnpm lint && pnpm typecheck && pnpm knip && pnpm test && pnpm build`).
