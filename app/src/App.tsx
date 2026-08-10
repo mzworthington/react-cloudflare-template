@@ -32,7 +32,7 @@ export function App() {
         <Switch>
           <Route path="/" component={HomePage} />
           <Route path="/design-system" component={DesignSystemPage} />
-          <Route path="/docs/:slug*" component={DocsPage} />
+          <Route path="/docs/*" component={DocsPage} />
           <Route path="/docs" component={DocsPage} />
           <Route>
             <section className="not-found">
