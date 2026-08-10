@@ -201,22 +201,15 @@ PY
   fi
 }
 
-# Prefer the current GitHub remote for SITE_REPO_URL / template ref after customize.
+# Prefer the current GitHub remote for SITE_REPO_URL after customize.
+# SITE_TEMPLATE_REF / create.sh always point at the upstream template (not this product repo).
 REPO_URL=""
 TEMPLATE_REF="mzworthington/react-cloudflare-template"
 if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
   REPO_URL="$(gh repo view --json url -q .url 2>/dev/null || true)"
-  TEMPLATE_REF="$(gh repo view --json nameWithOwner -q .nameWithOwner 2>/dev/null || true)"
 fi
 if [[ -z "$REPO_URL" ]]; then
   REPO_URL="$(git remote get-url origin 2>/dev/null | sed -E 's#git@github.com:#https://github.com/#; s#\.git$##' || true)"
-fi
-if [[ -z "$TEMPLATE_REF" || "$TEMPLATE_REF" == "null" ]]; then
-  if [[ "$REPO_URL" =~ github.com/([^/]+/[^/]+)$ ]]; then
-    TEMPLATE_REF="${BASH_REMATCH[1]}"
-  else
-    TEMPLATE_REF="mzworthington/react-cloudflare-template"
-  fi
 fi
 if [[ -z "$REPO_URL" ]]; then
   REPO_URL="https://github.com/${TEMPLATE_REF}"
@@ -249,9 +242,9 @@ export const SITE_TAGLINE =
   '{q(tagline)}';
 /** Public site origin (no trailing slash). Used for canonical/SEO when enabled. */
 export const SITE_ORIGIN = '{q(origin)}';
-/** GitHub repository for this template (or your fork after init). */
+/** GitHub repository for this product. */
 export const SITE_REPO_URL = '{q(repo_url)}';
-/** Owner/name used in `gh repo create --template …`. */
+/** Upstream template used by `scripts/create.sh` / `gh repo create --template …`. */
 export const SITE_TEMPLATE_REF = '{q(template_ref)}';
 /** Author credit shown in the site footer. */
 export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
@@ -344,14 +337,52 @@ for name_attr, value in (
 pathlib.Path("app/index.html").write_text(html)
 PY
 
-# README title (first H1 only)
-python3 - "$NAME" <<'PY'
-import pathlib, re, sys
-name = sys.argv[1]
-path = pathlib.Path("README.md")
-text = path.read_text()
-path.write_text(re.sub(r"^# .+$", f"# {name}", text, count=1, flags=re.M))
+# Product README: replace the template marketing page with placeholders.
+python3 - "$NAME" "$DESCRIPTION" <<'PY'
+import pathlib, sys
+
+name, description = sys.argv[1:3]
+description = description.strip() or "TODO: one-line summary of what this project does."
+pathlib.Path("README.md").write_text(
+    f"""# {name}
+
+{description}
+
+## Overview
+
+TODO: describe the product, who it is for, and the problem it solves.
+
+## Getting started
+
+```bash
+bin/setup-dev-env.sh
+cd app && pnpm dev
+```
+
+## Docs
+
+Edit Markdown under `docs/` (rendered in-app at `/docs`).
+
+TODO: add product-specific docs as you go.
+
+## Design
+
+Starter UI tokens and assets live in `design-pack/` and `app/src/index.css`.
+
+TODO: rebrand marks and tokens for this product.
+
+## License
+
+See [LICENSE](./LICENSE).
+"""
+)
 PY
+
+# Template-only: create.sh belongs in react-cloudflare-template, not product clones.
+if [[ -e scripts/create.sh ]]; then
+  rm -f scripts/create.sh
+  rmdir scripts 2>/dev/null || true
+fi
 
 replace_in_file mise.toml \
   "# Toolchain for $FROM_SLUG." \
@@ -383,7 +414,7 @@ echo
 echo "Next:"
 echo "  1. bin/setup-dev-env.sh"
 echo "  2. cd app && pnpm dev"
-echo "  3. Review app/src/siteConfig.ts (brand + origin)"
+echo "  3. Fill in README.md placeholders; review app/src/siteConfig.ts"
 echo "  4. When ready for hosting:"
 echo "       cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, tokens"
 echo "       bin/setup-cloudflare-hosting.sh"
@@ -391,3 +422,4 @@ echo "       # Or: DOMAIN=example.com PAGES_HOSTNAMES=app.example.com \\"
 echo "       #     PAGES_PROJECT_NAME=$SLUG PULUMI_STACK=prod bin/setup-cloudflare-hosting.sh"
 echo
 echo "Tip: commit the customization as its own change before feature work."
+echo "Note: scripts/create.sh stays only on the template repo; it is removed here."
