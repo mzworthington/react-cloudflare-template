@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { CopyableSnippet } from '../components/CopyableSnippet';
 import {
   SITE_CREATE_COMMAND,
   SITE_DESCRIPTION,
@@ -40,15 +41,11 @@ export function HomePage() {
         <div className="hero-snippets">
           <div className="hero-snippet" data-testid="template-snippet">
             <p className="hero-snippet-label">Use this template</p>
-            <pre>
-              <code>{SITE_CREATE_COMMAND}</code>
-            </pre>
+            <CopyableSnippet code={SITE_CREATE_COMMAND} label="Copy create command" />
           </div>
           <div className="hero-snippet" data-testid="hosting-snippet">
             <p className="hero-snippet-label">Host on Cloudflare</p>
-            <pre>
-              <code>{HOSTING_SNIPPET}</code>
-            </pre>
+            <CopyableSnippet code={HOSTING_SNIPPET} label="Copy hosting commands" />
             <p className="hero-snippet-hint">
               <a href="/docs/custom-domains">Custom domains &amp; secrets →</a>
             </p>
