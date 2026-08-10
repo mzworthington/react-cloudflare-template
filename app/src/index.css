@@ -301,6 +301,26 @@
     @apply bg-transparent p-0 text-inherit;
   }
 
+  .docs-mermaid {
+    @apply border-line bg-mist-soft my-6 overflow-x-auto rounded-lg border px-4 py-5;
+  }
+
+  .docs-mermaid :where(svg) {
+    @apply mx-auto block h-auto max-w-full;
+  }
+
+  .docs-mermaid-loading {
+    @apply text-ink-muted font-mono text-sm;
+  }
+
+  .docs-mermaid-error {
+    @apply text-ink-muted space-y-3 text-sm;
+  }
+
+  .docs-mermaid-error pre {
+    @apply my-0;
+  }
+
   .prose-docs table {
     @apply my-6 w-full border-collapse text-left text-sm;
   }

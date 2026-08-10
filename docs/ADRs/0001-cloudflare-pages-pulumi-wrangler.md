@@ -26,6 +26,13 @@ The template should take a new project from empty clone to a deployed site with 
 
 Chosen option: "**Option C**". Pulumi manages the Pages project and optional custom domains; CI builds `dist/` and runs `wrangler pages deploy`. SPA routing uses `public/_redirects`.
 
+```mermaid
+flowchart LR
+  App["Vite app"] --> Dist[dist]
+  Dist --> Pages[Cloudflare Pages]
+  Pulumi[Pulumi] --> Pages
+```
+
 ### Consequences
 
 - Good, because deploy stays behind quality gates
