@@ -7,13 +7,17 @@ A GitHub template for a **React + TypeScript + Tailwind** SPA on **Cloudflare Pa
 ![Home: React Cloudflare Template](docs/screenshots/home.png)
 
 ```bash
-gh repo create my-app --template mzworthington/react-cloudflare-template --public --clone
-cd my-app
-bin/init-project.sh --name "My App" --slug my-app
-bin/setup-dev-env.sh && cd app && pnpm dev
+curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
 ```
 
-Or click **Use this template** on GitHub.
+Prompts for name/slug, creates the GitHub repo from this template, brands it, and can run `bin/setup-dev-env.sh`. Prefer `| bash` (not `| sh`).
+
+Or click **Use this template** on GitHub, then:
+
+```bash
+bin/init-project.sh   # prompts for name / slug
+bin/setup-dev-env.sh && cd app && pnpm dev
+```
 
 ---
 
@@ -102,29 +106,32 @@ Vite gives you a blank app. This template is the baseline so day one is product 
 | Docs in git, browsable in the app                     | Bolt on a separate docs site later                 |
 | Prettier, oxlint, Vitest, knip, Husky, CodeQL         | Debate the toolchain on day one                    |
 | Changelog + Lighthouse workflows                      | Discover gaps after the first launch               |
-| `bin/init-project.sh` for name, slug, origin          | Search-replace `react-cloudflare-template` by hand |
+| `scripts/create.sh` + `bin/init-project.sh`           | Search-replace `react-cloudflare-template` by hand |
 
 ---
 
 ## Nothing → live site
 
-1. **Create** from the template and clone.
-2. **Brand it**: slug, display name, description, public origin:
+1. **Create** from the template (prompts for name/slug):
 
    ```bash
-   bin/init-project.sh --name "My App" --slug my-app \
-     --description "My app on Cloudflare Pages" \
-     --origin https://my-app.example.com
+   curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
    ```
 
-3. **Run locally**
+   Or click **Use this template** on GitHub, clone, then brand:
+
+   ```bash
+   bin/init-project.sh   # prompts; or pass --name / --slug / --origin
+   ```
+
+2. **Run locally**
 
    ```bash
    bin/setup-dev-env.sh
    cd app && pnpm dev
    ```
 
-4. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain).
+3. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain).
    Hostnames and tokens stay out of the template; use local `.env` or GitHub vars.
    Full walkthrough: [docs/custom-domains.md](docs/custom-domains.md).
 
@@ -134,9 +141,9 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    bin/setup-cloudflare-hosting.sh
    ```
 
-5. **Apply infra**: `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.
-6. **Deploy**: push to `main`; CI builds and runs `wrangler pages deploy`.
-7. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom hostnames after DNS is active).
+4. **Apply infra**: `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.
+5. **Deploy**: push to `main`; CI builds and runs `wrangler pages deploy`.
+6. Open `https://<PAGES_PROJECT_NAME>.pages.dev` (custom hostnames after DNS is active).
 
 `bin/init-project.sh` updates `app/src/siteConfig.ts`, `wrangler.toml`, package names, HTML title/description, and the CI Pages fallback. Re-run with `--force` to change again.
 
@@ -148,7 +155,8 @@ Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/cus
 
 | Command                              | Purpose                                     |
 | ------------------------------------ | ------------------------------------------- |
-| `bin/init-project.sh --name …`       | Customize slug, brand, description, origin  |
+| `scripts/create.sh` (curl \| bash)   | Create GitHub repo from template + brand    |
+| `bin/init-project.sh`                | Customize slug, brand, description, origin  |
 | `cd app && pnpm dev`                 | Dev server                                  |
 | `cd app && pnpm knip`                | Unused files / exports / deps               |
 | `cd app && pnpm test` / `pnpm build` | Unit tests / production build               |
@@ -160,13 +168,7 @@ Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/cus
 
 ## Styling
 
-<<<<<<< HEAD
-The starter ships a light Tailwind look (Syne + Source Sans 3, coastal-ink tokens in `app/src/index.css`). Treat it as a demo shell; rebrand colors and type for your product once the plumbing is yours.
-=======
-
 The starter ships a light Tailwind coastal-ink system (Syne + Source Sans 3, tokens and named recipes in `app/src/index.css`), a **design pack** under [`design-pack/`](design-pack/) (favicon, logos, PWA icons, `social-share.png`), and a lightweight in-app showcase at `/design-system`. Written guide: [`docs/design-system.md`](docs/design-system.md). Treat the shell as a demo — rebrand colors, type, and the mark for your product once the plumbing is yours.
-
-> > > > > > > 832ddcd (feat: enhance design system and branding features)
 
 ---
 

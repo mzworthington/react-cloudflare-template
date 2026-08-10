@@ -2,14 +2,17 @@
 # Customize a clone of this template: slug, display name, description, tagline, origin.
 #
 # Usage:
+#   bin/init-project.sh                          # interactive prompts
 #   bin/init-project.sh --name "Acme App" --slug acme-app
 #   bin/init-project.sh --name "Acme App" --slug acme-app \
 #     --description "Acme on Cloudflare Pages" \
 #     --tagline "Ship Acme faster." \
 #     --origin https://acme.example.com
 #
+# Greenfield (create repo + brand): scripts/create.sh (curl | bash).
+#
 # Options:
-#   --name          Display / brand name (required)
+#   --name          Display / brand name (prompted if omitted)
 #   --slug          kebab-case package + Pages project id (default: derived from --name)
 #   --description   Meta description / short summary
 #   --tagline       Home hero supporting sentence
@@ -39,14 +42,18 @@ usage() {
 Customize a clone of this template: slug, display name, description, tagline, origin.
 
 Usage:
+  bin/init-project.sh                          # interactive prompts
   bin/init-project.sh --name "Acme App" --slug acme-app
   bin/init-project.sh --name "Acme App" --slug acme-app \
     --description "Acme on Cloudflare Pages" \
     --tagline "Ship Acme faster." \
     --origin https://acme.example.com
 
+Greenfield (create GitHub repo from template + brand):
+  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+
 Options:
-  --name          Display / brand name (required)
+  --name          Display / brand name (prompted if omitted on a TTY)
   --slug          kebab-case package + Pages project id (default: derived from --name)
   --description   Meta description / short summary
   --tagline       Home hero supporting sentence
@@ -73,15 +80,43 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -n "$NAME" ]] || { echo "✗ --name is required" >&2; usage >&2; exit 1; }
-
 slugify() {
   # Lowercase, non-alnum → hyphen, trim hyphens (Cloudflare Pages–safe).
   echo "$1" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//; s/-+/-/g'
 }
 
+prompt_value() {
+  local var_name="$1" label="$2" default="${3:-}" reply=""
+  local current="${!var_name}"
+  [[ -n "$current" ]] && return 0
+  if [[ ! -e /dev/tty ]]; then
+    echo "✗ ${label} is required (pass --$(echo "$var_name" | tr '[:upper:]' '[:lower:]') or run on a TTY)" >&2
+    usage >&2
+    exit 1
+  fi
+  if [[ -n "$default" ]]; then
+    read -r -p "${label} [${default}]: " reply </dev/tty
+    reply="${reply:-$default}"
+  else
+    while [[ -z "$reply" ]]; do
+      read -r -p "${label}: " reply </dev/tty
+      [[ -n "$reply" ]] || echo "  (required)" >&2
+    done
+  fi
+  printf -v "$var_name" '%s' "$reply"
+}
+
+if [[ -z "$NAME" ]]; then
+  echo "→ Customize this project"
+  echo
+fi
+prompt_value NAME "App name"
 if [[ -z "$SLUG" ]]; then
-  SLUG="$(slugify "$NAME")"
+  if [[ -e /dev/tty && -z "${CI:-}" ]]; then
+    prompt_value SLUG "Repo slug (kebab-case)" "$(slugify "$NAME")"
+  else
+    SLUG="$(slugify "$NAME")"
+  fi
 fi
 
 if ! [[ "$SLUG" =~ ^[a-z0-9]([a-z0-9-]*[a-z0-9])?$ ]]; then
@@ -222,12 +257,13 @@ export const SITE_TEMPLATE_REF = '{q(template_ref)}';
 export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
 export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
-export function templateCloneSnippet(appSlug = 'my-app'): string {{
-  return [
-    `gh repo create ${{appSlug}} --template ${{SITE_TEMPLATE_REF}} --public --clone`,
-    `cd ${{appSlug}}`,
-    `bin/init-project.sh --name "My App" --slug ${{appSlug}}`,
-  ].join('\\n');
+/** One-line create script (prompts for name/slug). Prefer `| bash` (not `| sh`). */
+export const SITE_CREATE_COMMAND =
+  'curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash';
+
+/** @deprecated Prefer SITE_CREATE_COMMAND. */
+export function templateCloneSnippet(): string {{
+  return SITE_CREATE_COMMAND;
 }}
 
 /** Short hosting teaser; full walkthrough lives in docs/custom-domains. */

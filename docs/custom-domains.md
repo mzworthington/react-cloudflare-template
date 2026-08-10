@@ -28,7 +28,7 @@ You can ship on `*.pages.dev` only, then add a custom subdomain later.
 | -------------------- | ----------------------------------------------- |
 | `DOMAIN`             | `example.com` (the **zone** name in Cloudflare) |
 | `PAGES_HOSTNAMES`    | `app.example.com`                               |
-| `PAGES_PROJECT_NAME` | `my-app`                                        |
+| `PAGES_PROJECT_NAME` | same as init slug (e.g. `my-app`)               |
 | `--origin`           | `https://app.example.com`                       |
 
 Multiple subdomains: `PAGES_HOSTNAMES=app.example.com,staging.example.com`.
@@ -46,6 +46,8 @@ bin/init-project.sh --name "My App" --slug my-app \
   --origin https://app.example.com
 ```
 
+Or run `bin/init-project.sh` with no flags and answer the prompts.
+
 This writes `SITE_ORIGIN` in `app/src/siteConfig.ts`. Re-run with `--force` to change later.
 
 ### 2. Local `.env` (recommended)
@@ -54,7 +56,7 @@ This writes `SITE_ORIGIN` in `app/src/siteConfig.ts`. Re-run with `--force` to c
 cp .env.example .env
 ```
 
-Edit at least:
+Edit at least (Pages project name should match the slug from init):
 
 ```bash
 PULUMI_STACK=prod

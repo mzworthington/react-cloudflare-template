@@ -15,12 +15,13 @@ export const SITE_TEMPLATE_REF = 'mzworthington/react-cloudflare-template';
 export const SITE_AUTHOR_NAME = 'Matthew Z Worthington';
 export const SITE_AUTHOR_URL = 'https://mzworthington.co.uk';
 
-export function templateCloneSnippet(appSlug = 'my-app'): string {
-  return [
-    `gh repo create ${appSlug} --template ${SITE_TEMPLATE_REF} --public --clone`,
-    `cd ${appSlug}`,
-    `bin/init-project.sh --name "My App" --slug ${appSlug}`,
-  ].join('\n');
+/** One-line create script (prompts for name/slug). Prefer `| bash` (not `| sh`). */
+export const SITE_CREATE_COMMAND =
+  'curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash';
+
+/** @deprecated Prefer SITE_CREATE_COMMAND. */
+export function templateCloneSnippet(): string {
+  return SITE_CREATE_COMMAND;
 }
 
 /** Short hosting teaser; full walkthrough lives in docs/custom-domains. */

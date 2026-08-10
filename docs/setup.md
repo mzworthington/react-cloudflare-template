@@ -8,9 +8,11 @@
 ## Quick start
 
 ```bash
-bin/init-project.sh --name "My App" --slug my-app \
-  --description "My app on Cloudflare Pages" \
-  --origin https://my-app.example.com
+# Greenfield: prompts for name/slug, creates the repo, brands it
+curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash
+
+# Already cloned from “Use this template”:
+bin/init-project.sh   # prompts; or --name / --slug / --origin
 bin/setup-dev-env.sh
 cd app && pnpm dev
 ```

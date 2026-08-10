@@ -5,7 +5,7 @@
 See [Setup](docs/setup.md).
 
 ```bash
-bin/init-project.sh --name "My App" --slug my-app
+bin/init-project.sh   # prompts; or --name / --slug
 bin/setup-dev-env.sh
 cd app && pnpm dev
 ```

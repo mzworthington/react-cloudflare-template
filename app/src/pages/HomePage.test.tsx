@@ -1,6 +1,6 @@
 import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it } from 'vitest';
-import { SITE_NAME, SITE_REPO_URL, SITE_TEMPLATE_REF } from '../siteConfig';
+import { SITE_CREATE_COMMAND, SITE_NAME, SITE_REPO_URL } from '../siteConfig';
 import { HomePage } from './HomePage';
 
 afterEach(() => {
@@ -19,11 +19,11 @@ describe('HomePage', () => {
     expect(link.getAttribute('href')).toBe(SITE_REPO_URL);
   });
 
-  it('shows a gh template clone snippet', () => {
+  it('shows the create-script one-liner', () => {
     render(<HomePage />);
     const snippet = screen.getByTestId('template-snippet');
-    expect(snippet.textContent).toContain(`--template ${SITE_TEMPLATE_REF}`);
-    expect(snippet.textContent).toContain('bin/init-project.sh');
+    expect(snippet.textContent).toContain(SITE_CREATE_COMMAND);
+    expect(snippet.textContent).toContain('scripts/create.sh');
   });
 
   it('shows a hosting bootstrap teaser linked to custom-domains docs', () => {

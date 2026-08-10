@@ -14,7 +14,7 @@ export BWS_PROJECT_ID="..."
 export PULUMI_STACK=prod
 export DOMAIN=example.com
 export PAGES_HOSTNAMES=app.example.com
-export PAGES_PROJECT_NAME=my-app
+export PAGES_PROJECT_NAME=my-app   # same as init-project slug
 
 gh auth login
 pulumi login
