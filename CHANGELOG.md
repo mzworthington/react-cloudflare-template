@@ -1,5 +1,34 @@
 # Changelog
 
+## 2026-08-10
+
+### 🚀 Features
+
+- Implement copyable snippets for create and hosting commands in HomePage
+- Enhance documentation structure with ADR support and improve Markdown rendering
+- Add Mermaid.js support for diagram rendering in documentation
+
+### ⚙️ Refactoring & Performance
+
+- Update project initialization and documentation for improved clarity and usability
+- Streamline project initialization script and enhance README structure with placeholders
+
+### 🧰 Maintenance & Dependencies
+
+- Tighten quality gates
+- *(deps-dev)* Bump @types/node in /infra/cloudflare
+- *(deps-dev)* Bump typescript in /infra/cloudflare
+
+### 📚 Documentation
+
+- Note Dependabot skip for Pulumi secrets
+
+## 2026-08-09
+
+### 🚀 Features
+
+- Add author credit link to DocsShell component
+
 ## 2026-08-08
 
 ### 🧰 Maintenance & Dependencies
