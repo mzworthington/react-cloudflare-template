@@ -12,8 +12,8 @@ importers:
         specifier: 6.19.0
         version: 6.19.0(typescript@6.0.3)
       '@pulumi/pulumi':
-        specifier: 3.256.0
-        version: 3.256.0(typescript@6.0.3)
+        specifier: 3.258.0
+        version: 3.258.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
         specifier: 26.1.2
@@ -259,8 +259,8 @@ packages:
   '@pulumi/cloudflare@6.19.0':
     resolution: {integrity: sha512-AP76ceRwCIws362nm7UpfvDvzI4zPaGThli0i3qsKqjektk1qNapyflA9g0LvpI2e6VEWAdTbkIK7WSucg00Sg==}
 
-  '@pulumi/pulumi@3.256.0':
-    resolution: {integrity: sha512-EK1TQieOmxTxbIpX5EKTPpC1WYappH3ASEZzN6Q9gs7rZjuZCATXI9Am8nszmlRdtPlAiVSW8NfQNKCnaNk34A==}
+  '@pulumi/pulumi@3.258.0':
+    resolution: {integrity: sha512-IUds2PGz92YiaOSvegK6p5JjPdu0we+IcS9iClyaXRWWjxn7Po+omRoe/NJ58A0fpZFIZUUKM8+Lg7gYd1RczA==}
     engines: {node: '>=22'}
     peerDependencies:
       ts-node: '>= 7.0.1 < 12'
@@ -1176,13 +1176,13 @@ snapshots:
 
   '@pulumi/cloudflare@6.19.0(typescript@6.0.3)':
     dependencies:
-      '@pulumi/pulumi': 3.256.0(typescript@6.0.3)
+      '@pulumi/pulumi': 3.258.0(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
       - typescript
 
-  '@pulumi/pulumi@3.256.0(typescript@6.0.3)':
+  '@pulumi/pulumi@3.258.0(typescript@6.0.3)':
     dependencies:
       '@grpc/grpc-js': 1.14.4
       '@logdna/tail-file': 2.2.0
