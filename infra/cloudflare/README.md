@@ -1,6 +1,8 @@
 # Cloudflare infrastructure (Pulumi)
 
-Pages project + custom **subdomain** hostnames on an existing active zone, plus Web Analytics (RUM) and Observatory scheduled tests. The SPA is built in CI and deployed with `wrangler pages deploy`.
+Pages project + custom **subdomain** hostnames on an existing active zone, plus optional Web Analytics (RUM) and Observatory scheduled tests. The SPA is built in CI and deployed with `wrangler pages deploy`.
+
+Zone-level Web Analytics is **opt-in** (`enableWebAnalytics`, default `false`) so clones on a shared apex do not create a second RUM site. CI injects the zone's existing beacon via [edge-dns inject-web-analytics-beacon](https://github.com/mzworthington/edge-dns/blob/main/docs/reusable-cloudflare-ci.md) (`required: false` so a fork without a site still deploys).
 
 Real zone/hostname values live in gitignored `Pulumi.<stack>.yaml`, local `.env`, or GitHub Actions vars; see [Custom domains](../../docs/custom-domains.md) and [secrets checklist](../../docs/cloudflare-secrets.md).
 
@@ -8,7 +10,7 @@ Real zone/hostname values live in gitignored `Pulumi.<stack>.yaml`, local `.env`
 |----------|---------|
 | `PagesProject` | Direct-upload Pages project |
 | `DnsRecord` / `PagesDomain` | Proxied CNAME + hostname binding per `pagesHostnames` entry |
-| `WebAnalyticsSite` | Zone RUM / Web Analytics (`autoInstall`) |
+| `WebAnalyticsSite` | Zone RUM site - opt-in via `enableWebAnalytics` (default off on shared zones) |
 | `ObservatoryScheduledTest` | Synthetic Speed test per Pages hostname |
 
 If Web Analytics or Observatory was enabled in the dashboard first, import before `pulumi up`:

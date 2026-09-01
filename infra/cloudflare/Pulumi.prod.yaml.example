@@ -7,3 +7,5 @@ config:
   # Subdomains on an existing active zone:
   react-cloudflare-template:pagesHostnames:
     - app.example.com
+  # true only when this stack owns the zone Web Analytics site (not a shared apex)
+  react-cloudflare-template:enableWebAnalytics: false

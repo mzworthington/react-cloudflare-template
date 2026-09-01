@@ -5,6 +5,8 @@ const config = new pulumi.Config();
 const accountId = config.require('accountId');
 const zoneId = config.require('zoneId');
 const pagesProjectName = config.require('pagesProjectName');
+/** Zone RUM is shared; only enable when this stack owns the zone's analytics site. */
+const enableWebAnalytics = config.getBoolean('enableWebAnalytics') ?? false;
 
 /** Subdomain hostnames attached to the Pages project (existing zone assumed). */
 function resolvePagesHostnames(): string[] {
@@ -55,15 +57,19 @@ for (const hostname of pagesHostnames) {
 
 const zone = cloudflare.getZoneOutput({ zoneId });
 
-/** RUM beacon auto-injected for orange-clouded hosts on this zone. */
-const webAnalytics = new cloudflare.WebAnalyticsSite('web-analytics', {
-  accountId,
-  zoneTag: zoneId,
-  autoInstall: true,
-});
+/** Zone-owner RUM only. Shared-zone hosts reuse the apex site via CI inject. */
+const webAnalytics = enableWebAnalytics
+  ? new cloudflare.WebAnalyticsSite('web-analytics', {
+      accountId,
+      zoneTag: zoneId,
+      autoInstall: false,
+    })
+  : undefined;
 
 export const pagesProjectNameOut = pagesProject.name;
 export const pagesSubdomain = pagesProject.subdomain;
 export const pagesHostnamesOut = pagesHostnames;
 export const zoneName = zone.name;
-export const webAnalyticsSiteTag = webAnalytics.siteTag;
+/** Present only when `enableWebAnalytics` is true. */
+export const webAnalyticsSiteTag = webAnalytics?.siteTag ?? null;
+export const webAnalyticsSiteToken = webAnalytics?.siteToken ?? null;
