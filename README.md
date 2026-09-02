@@ -34,7 +34,7 @@ Everything below is included when you create from the template, not a backlog of
 | **Docs**            | A git-backed doc store: Markdown under `docs/` (setup, architecture, ADRs) rendered in-app at `/docs`, with no separate docs framework or object storage.           |
 | **CI & quality**    | **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged**, **CodeQL**, **Lighthouse CI**; see [Quality](#quality).                |
 | **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), and a Lighthouse CI workflow with report artifacts.                                        |
-| **Agent-ready**     | Thin `AGENTS.md` pointing at [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit) so coding agents share the same conventions.               |
+| **Agent-ready**     | Thin `AGENTS.md` pointing at [Waykit](https://github.com/mzworthington/waykit) so coding agents share the same conventions.               |
 
 ```text
 Browser  →  React site (+ /docs)  →  Cloudflare Pages

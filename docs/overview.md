@@ -9,7 +9,7 @@ Everything below ships when you create from the template, not a backlog of “ni
 | **Docs**            | Git-backed doc store: Markdown under `docs/` rendered in-app at `/docs`, with no separate docs framework or object storage.                                                                                     |
 | **CI & quality**    | Named toolchain: **Prettier**, **oxlint**, **TypeScript**, **knip**, **Vitest**, **Husky** + **lint-staged** pre-commit, plus **CodeQL** and **Lighthouse CI**; see [Quality](/docs/quality).                   |
 | **Release hygiene** | git-cliff changelog, weekly derived sync (changelog + docs screenshots), Lighthouse CI with report artifacts.                                                                                                   |
-| **Agent-ready**     | Thin `AGENTS.md` → [agent-lifecycle-kit](https://github.com/mzworthington/agent-lifecycle-kit).                                                                                                                 |
+| **Agent-ready**     | Thin `AGENTS.md` → [Waykit](https://github.com/mzworthington/waykit).                                                                                                                 |
 
 ```text
 Browser  →  React site (+ /docs)  →  Cloudflare Pages
