@@ -5,6 +5,7 @@ import { SITE_NAME } from './siteConfig';
 import { DesignSystemPage } from './pages/DesignSystemPage';
 import { DocsPage } from './pages/DocsPage';
 import { HomePage } from './pages/HomePage';
+import { PrivacyPage } from './pages/PrivacyPage';
 
 export function App() {
   return (
@@ -31,6 +32,7 @@ export function App() {
       <main>
         <Switch>
           <Route path="/" component={HomePage} />
+          <Route path="/privacy" component={PrivacyPage} />
           <Route path="/design-system" component={DesignSystemPage} />
           <Route path="/docs/*" component={DocsPage} />
           <Route path="/docs" component={DocsPage} />

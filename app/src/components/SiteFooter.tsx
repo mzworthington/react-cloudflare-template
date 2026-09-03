@@ -8,6 +8,8 @@ export function SiteFooter() {
         <a href={SITE_AUTHOR_URL} rel="noopener noreferrer">
           {SITE_AUTHOR_NAME}
         </a>
+        {' · '}
+        <a href="/privacy">Privacy</a>
       </p>
     </footer>
   );

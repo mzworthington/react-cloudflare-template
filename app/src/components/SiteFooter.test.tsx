@@ -12,5 +12,6 @@ describe('SiteFooter', () => {
     render(<SiteFooter />);
     const credit = screen.getByRole('link', { name: SITE_AUTHOR_NAME });
     expect(credit.getAttribute('href')).toBe(SITE_AUTHOR_URL);
+    expect(screen.getByRole('link', { name: 'Privacy' }).getAttribute('href')).toBe('/privacy');
   });
 });

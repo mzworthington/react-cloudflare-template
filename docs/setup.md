@@ -55,6 +55,8 @@ pnpm record:docs-media   # Playwright screenshots for the README
 
 Without a custom domain, the site is available at `https://<PAGES_PROJECT_NAME>.pages.dev` after the first deploy.
 
+**Product analytics:** the SPA reads `POSTHOG_TOKEN` (PostHog project API key). Put it in the environment or `app/.env.development.local`. Production builds on `main` bake `secrets.POSTHOG_TOKEN`. Missing token: no capture in production; in `pnpm dev` the console logs that events will be missed. Ingest defaults to `https://a.mzworthington.co.uk` (`POSTHOG_HOST` to override). The SDK uses `cookieless_mode: 'always'` and session replay is off. In PostHog, enable **Cookieless server hash mode** under project settings → Web analytics or cookieless events are dropped. Privacy notice: `/privacy`. After you fork the template, create a PostHog project for that site and set `POSTHOG_TOKEN`. The GitHub Actions secret cannot be created by an agent.
+
 ## Derived outputs
 
 Changelog, docs screenshots, and related artifacts:
