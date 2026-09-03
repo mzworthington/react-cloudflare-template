@@ -33,14 +33,14 @@ The **zone** (`DOMAIN`) must already be active on Cloudflare (managed in edge-dn
 
 ## Secrets / vars
 
-| Key                         | Kind     | Used by              |
-| --------------------------- | -------- | -------------------- |
-| `CLOUDFLARE_API_TOKEN`      | secret   | Wrangler + Pulumi    |
-| `CLOUDFLARE_ACCOUNT_ID`     | secret   | Wrangler + Pulumi    |
-| `CLOUDFLARE_ZONE_ID`        | secret   | Pulumi DNS / domains |
-| `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow      |
-| `PULUMI_PAGES_PROJECT_NAME` | variable | Deploy + Pulumi      |
-| `PULUMI_PAGES_HOSTNAMES`    | variable | Pulumi (JSON array)  |
+| Key                         | Kind     | Used by                                         |
+| --------------------------- | -------- | ----------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`      | secret   | Wrangler + Pulumi                               |
+| `CLOUDFLARE_ACCOUNT_ID`     | secret   | Wrangler + Pulumi                               |
+| `CLOUDFLARE_ZONE_ID`        | secret   | Pulumi DNS / domains                            |
+| `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow                                 |
+| `PULUMI_PAGES_PROJECT_NAME` | variable | Deploy + Pulumi                                 |
+| `PULUMI_PAGES_HOSTNAMES`    | variable | Pulumi (JSON array)                             |
 | `POSTHOG_TOKEN`             | secret   | Pages build on `main` (PostHog project API key) |
 
 Prefer a **dedicated BWS project** per site. Bootstrap always resolves the zone from `DOMAIN`.

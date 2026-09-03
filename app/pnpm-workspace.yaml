@@ -1,5 +1,5 @@
 allowBuilds:
-  core-js: true
+  core-js: false
   esbuild: true
   workerd: true
 minimumReleaseAgeExclude:
