@@ -16,8 +16,8 @@ importers:
         version: 3.256.0(typescript@6.0.3)
     devDependencies:
       '@types/node':
-        specifier: 26.1.2
-        version: 26.1.2
+        specifier: 26.3.0
+        version: 26.3.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -306,8 +306,8 @@ packages:
   '@types/google-protobuf@3.15.12':
     resolution: {integrity: sha512-40um9QqwHjRS92qnOaDpL7RmDK15NuZYo9HihiJRbYkMQZlWnuH8AdvbMy8/o6lgLmKbDUKa+OALCltHdbOTpQ==}
 
-  '@types/node@26.1.2':
-    resolution: {integrity: sha512-Vu4a5UFA9rIIFJ7rB/Vaafh9lrCQszopTCx6KjFboXTGQbPNasehVR5TEiithSDGyd1DEiUByggTZsg8jukeIg==}
+  '@types/node@26.3.0':
+    resolution: {integrity: sha512-L3fgrnchriRC2ExBflb8j4uZZURHZfQsmQeyVzhjcHW4kkwVyo8/0h1B2MVzMTrYUJYu6G7EWs14hW/L9putqw==}
 
   '@types/semver@7.8.0':
     resolution: {integrity: sha512-1mAINjtQCXXeLkJ9ehXkwOcBpqtLxiVtKhpUf83DdRNdQKV0iXZpaHYqRr7nj+wvxuJzoAmAwXI+sCNMv1CzLQ==}
@@ -1255,7 +1255,7 @@ snapshots:
 
   '@types/google-protobuf@3.15.12': {}
 
-  '@types/node@26.1.2':
+  '@types/node@26.3.0':
     dependencies:
       undici-types: 8.3.0
 
@@ -1658,7 +1658,7 @@ snapshots:
       '@protobufjs/path': 1.1.2
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.2
-      '@types/node': 26.1.2
+      '@types/node': 26.3.0
       long: 5.3.2
 
   read-cmd-shim@6.0.0: {}
