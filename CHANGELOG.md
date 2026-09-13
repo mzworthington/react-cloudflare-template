@@ -1,5 +1,23 @@
 # Changelog
 
+## 2026-09-12
+
+### 🐛 Bug Fixes
+
+- *(deps)* Clear js-yaml and extract-zip Dependabot alerts (#27)
+
+### 🧰 Maintenance & Dependencies
+
+- Improve dependendabot & codeQL
+
+## 2026-09-11
+
+### 🧰 Maintenance & Dependencies
+
+- Dependabot fixes
+- *(deps-dev)* Bump @vitejs/plugin-react from 6.0.5 to 6.1.1 in /app (#19)
+- *(deps)* Bump app and Pulumi packages to latest current majors
+
 ## 2026-09-06
 
 ### 🧰 Maintenance & Dependencies
