@@ -1,5 +1,8 @@
 # React Cloudflare Template
 
+[![CI](https://img.shields.io/github/actions/workflow/status/mzworthington/react-cloudflare-template/ci.yml?branch=main&style=for-the-badge&logo=github-actions&label=CI)](https://github.com/mzworthington/react-cloudflare-template/actions/workflows/ci.yml)
+[![Quality gate](https://img.shields.io/sonar/alert_status/mzworthington_react-cloudflare-template?server=https%3A%2F%2Fsonarcloud.io&style=for-the-badge&logo=sonarqube)](https://sonarcloud.io/summary/new_code?id=mzworthington_react-cloudflare-template)
+
 **From empty repo to a live Cloudflare Pages site, so day one is product work, not plumbing.**
 
 A GitHub template for a **React + TypeScript + Tailwind** SPA on **Cloudflare Pages**, with docs-in-app, Pulumi, CI deploy, and the quality toolchain already in place.
