@@ -1,5 +1,22 @@
 # Changelog
 
+## 2026-09-20
+
+### 🧰 Maintenance & Dependencies
+
+- *(deps)* Batch dependabot updates (#40)
+- Update MCP configuration and add SonarQube integration
+
+## 2026-09-17
+
+### 🧰 Maintenance & Dependencies
+
+- Use local setup-pnpm-node composite
+
+### 📚 Documentation
+
+- Render readme status badges via shields.io
+
 ## 2026-09-12
 
 ### 🐛 Bug Fixes
