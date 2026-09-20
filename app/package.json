@@ -1,73 +1,73 @@
 {
-  "name": "react-cloudflare-template",
-  "private": true,
-  "version": "0.1.0",
-  "type": "module",
-  "packageManager": "pnpm@11.21.0",
-  "scripts": {
-    "prepare": "cd .. && husky",
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview",
-    "preview:pages": "wrangler pages dev dist --config ../wrangler.toml",
-    "typecheck": "tsc --noEmit --pretty false",
-    "lint": "oxlint src",
-    "format": "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write \"**/*.{ts,tsx,css,json,md,html,yml,yaml}\" \"../*.md\" \"../docs/**/*.{md,ts}\" \"../.github/**/*.{yml,yaml,md}\"",
-    "format:check": "prettier --config ../.prettierrc --ignore-path ../.prettierignore --check \"**/*.{ts,tsx,css,json,md,html,yml,yaml}\" \"../*.md\" \"../docs/**/*.{md,ts}\" \"../.github/**/*.{yml,yaml,md}\"",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:lighthouse": "lhci autorun",
-    "lighthouse:summary": "node scripts/writeLighthouseSummary.mjs",
-    "changelog:json": "git-cliff -c ../cliff.toml -x",
-    "record:docs-media": "RECORD_DOCS_MEDIA=1 playwright test --config playwright.docs-media.config.ts",
-    "sync-derived": "../bin/sync-derived.sh",
-    "knip": "knip"
-  },
-  "dependencies": {
-    "@posthog/react": "^1.10.6",
-    "mermaid": "11.17.2",
-    "posthog-js": "^1.430.2",
-    "react": "19.3.0",
-    "react-dom": "19.3.0",
-    "react-markdown": "10.1.0",
-    "remark-gfm": "4.0.1",
-    "wouter": "3.11.0"
-  },
-  "devDependencies": {
-    "@lhci/cli": "0.15.1",
-    "@playwright/test": "1.63.0",
-    "@tailwindcss/vite": "4.3.3",
-    "@testing-library/dom": "10.4.1",
-    "@testing-library/jest-dom": "7.0.1",
-    "@testing-library/react": "16.3.3",
-    "@types/node": "26.5.1",
-    "@types/react": "19.3.0",
-    "@types/react-dom": "19.3.0",
-    "@vitejs/plugin-react": "6.1.1",
-    "git-cliff": "2.13.1",
-    "husky": "9.1.7",
-    "jsdom": "30.0.1",
-    "knip": "6.35.1",
-    "lint-staged": "17.5.1",
-    "oxlint": "1.82.0",
-    "playwright": "1.63.0",
-    "prettier": "3.9.6",
-    "prettier-plugin-tailwindcss": "0.8.1",
-    "tailwindcss": "4.3.3",
-    "typescript": "7.0.2",
-    "vite": "8.3.0",
-    "vitest": "5.0.0",
-    "wrangler": "4.131.0"
-  },
-  "lint-staged": {
-    "**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml,css,html}": [
-      "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
-    ],
-    "../docs/**/*.{md,ts}": [
-      "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
-    ],
-    "../*.md": [
-      "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
-    ]
-  }
+    "name": "react-cloudflare-template",
+    "private": true,
+    "version": "0.1.0",
+    "type": "module",
+    "packageManager": "pnpm@11.21.0",
+    "scripts": {
+        "prepare": "cd .. && husky",
+        "dev": "vite",
+        "build": "tsc --noEmit && vite build",
+        "preview": "vite preview",
+        "preview:pages": "wrangler pages dev dist --config ../wrangler.toml",
+        "typecheck": "tsc --noEmit --pretty false",
+        "lint": "oxlint src",
+        "format": "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write \"**/*.{ts,tsx,css,json,md,html,yml,yaml}\" \"../*.md\" \"../docs/**/*.{md,ts}\" \"../.github/**/*.{yml,yaml,md}\"",
+        "format:check": "prettier --config ../.prettierrc --ignore-path ../.prettierignore --check \"**/*.{ts,tsx,css,json,md,html,yml,yaml}\" \"../*.md\" \"../docs/**/*.{md,ts}\" \"../.github/**/*.{yml,yaml,md}\"",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "test:lighthouse": "lhci autorun",
+        "lighthouse:summary": "node scripts/writeLighthouseSummary.mjs",
+        "changelog:json": "git-cliff -c ../cliff.toml -x",
+        "record:docs-media": "RECORD_DOCS_MEDIA=1 playwright test --config playwright.docs-media.config.ts",
+        "sync-derived": "../bin/sync-derived.sh",
+        "knip": "knip"
+    },
+    "dependencies": {
+        "@posthog/react": "^1.11.0",
+        "mermaid": "12.0.0",
+        "posthog-js": "^1.433.7",
+        "react": "19.3.0",
+        "react-dom": "19.3.0",
+        "react-markdown": "10.1.0",
+        "remark-gfm": "4.0.1",
+        "wouter": "3.11.0"
+    },
+    "devDependencies": {
+        "@lhci/cli": "0.15.1",
+        "@playwright/test": "1.63.0",
+        "@tailwindcss/vite": "4.3.3",
+        "@testing-library/dom": "10.4.2",
+        "@testing-library/jest-dom": "7.0.1",
+        "@testing-library/react": "16.3.3",
+        "@types/node": "26.6.1",
+        "@types/react": "19.3.0",
+        "@types/react-dom": "19.3.0",
+        "@vitejs/plugin-react": "6.1.1",
+        "git-cliff": "2.13.1",
+        "husky": "9.1.7",
+        "jsdom": "30.0.1",
+        "knip": "6.36.0",
+        "lint-staged": "17.5.1",
+        "oxlint": "1.83.0",
+        "playwright": "1.63.0",
+        "prettier": "3.9.7",
+        "prettier-plugin-tailwindcss": "0.8.1",
+        "tailwindcss": "4.3.3",
+        "typescript": "7.0.2",
+        "vite": "8.3.0",
+        "vitest": "5.0.1",
+        "wrangler": "4.133.0"
+    },
+    "lint-staged": {
+        "**/*.{ts,tsx,js,jsx,mjs,cjs,json,md,yml,yaml,css,html}": [
+            "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
+        ],
+        "../docs/**/*.{md,ts}": [
+            "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
+        ],
+        "../*.md": [
+            "prettier --config ../.prettierrc --ignore-path ../.prettierignore --write"
+        ]
+    }
 }
