@@ -8,5 +8,12 @@ describe('coverage report omits test files', () => {
   it('excludes *.test and *.spec modules from Vitest coverage include set', () => {
     expect(vitestConfig).toMatch(/include:\s*\['src\/\*\*\/\*\.\{ts,tsx\}'\]/);
     expect(vitestConfig).toMatch(/\*\*\/\*\.\{test,spec\}\.\{ts,tsx\}/);
+    expect(vitestConfig).toMatch(/\*\*\/test\/\*\*/);
+    expect(vitestConfig).toMatch(/\*\*\/tests\/\*\*/);
+    expect(vitestConfig).toMatch(/\*\*\/scripts\/\*\*/);
+    expect(vitestConfig).toMatch(/\*\*\/vite\.config\.\*/);
+    expect(vitestConfig).toMatch(/\*\*\/vitest\.config\.\*/);
+    expect(vitestConfig).toMatch(/\*\*\/\.vite\/\*\*/);
+    expect(vitestConfig).toMatch(/\*\*\/vite\/\*\*/);
   });
 });
