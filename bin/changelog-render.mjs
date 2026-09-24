@@ -86,7 +86,7 @@ for (const release of releases) {
 
 const lines = ['# Changelog', ''];
 
-for (const date of [...byDay.keys()].sort().reverse()) {
+for (const date of [...byDay.keys()].sort((a, b) => new Date(b).getTime() - new Date(a).getTime()).reverse()) {
   lines.push(`## ${date}`, '');
   const groups = [...byDay.get(date).entries()].sort(
     ([a], [b]) => (GROUP_RANK.get(a) ?? 99) - (GROUP_RANK.get(b) ?? 99),

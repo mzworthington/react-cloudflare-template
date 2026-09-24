@@ -10,7 +10,7 @@
 # Non-interactive:
 #   curl -fsSL …/create.sh | bash -s -- --name "My App" --slug my-app \
 #     --description "…" --topics "react,cloudflare,typescript"
-if [ -z "${BASH_VERSION:-}" ]; then
+if [[ -z "${BASH_VERSION:-}" ]]; then
   echo "error: run this script with bash, e.g.:" >&2
   echo "  curl -fsSL https://raw.githubusercontent.com/mzworthington/react-cloudflare-template/main/scripts/create.sh | bash && cd \"\$(cat \"\${TMPDIR:-/tmp}/react-cloudflare-template-last-dir\")\"" >&2
   exit 1
