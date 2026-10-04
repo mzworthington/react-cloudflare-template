@@ -172,3 +172,10 @@
 ### 🧰 Maintenance & Dependencies
 
 - Code quality improvements
+
+## 2026-10-01
+
+### 🐛 Bug Fixes
+
+- *(deps)* Apply Dependabot bumps and patch open advisories
+- *(deps)* Raise transitive pins past the remaining advisories
