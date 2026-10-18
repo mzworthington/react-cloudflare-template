@@ -179,3 +179,30 @@
 
 - *(deps)* Apply Dependabot bumps and patch open advisories
 - *(deps)* Raise transitive pins past the remaining advisories
+
+## 2026-10-17
+
+### 🐛 Bug Fixes
+
+- *(deps)* Land open dependency updates and patched advisories
+
+### 🧰 Maintenance & Dependencies
+
+- Keep Dependabot lockfile updates with the manifest
+- *(deps)* Bump the npm-minor-patch group across 1 directory with 2 updates
+
+### 🎨 Styling
+
+- Format Dependabot config for the pre-commit check
+
+## 2026-10-18
+
+### 🐛 Bug Fixes
+
+- *(deps)* Pin sharp to 0.35.5 for the librsvg advisory
+- *(deps)* Add source-map-js to dependencies and set version constraint
+- *(deps)* Update source-map-js to version 1.2.2 in pnpm-lock.yaml
+
+### 🧰 Maintenance & Dependencies
+
+- *(deps)* Bump the npm-minor-patch group across 1 directory with 15 updates
