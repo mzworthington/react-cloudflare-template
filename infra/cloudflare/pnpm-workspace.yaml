@@ -2,7 +2,12 @@ overrides:
   http-cache-semantics: '>=4.3.0'
   brace-expansion@5: 5.0.12
   '@grpc/grpc-js': 1.14.5
-  ip-address: '>=10.7.1'
+  ip-address: '>=10.7.4'
+  'undici@6': 6.29.1
+  # glob 9–14.0.1 and minimatch < 11.0.1 have no in-range patch.
+  # @pulumi/pulumi still resolves glob 13 / minimatch 10.
+  'glob@13': 14.0.3
+  'minimatch@10': 11.0.3
 allowBuilds:
   protobufjs: true
 minimumReleaseAgeExclude:
