@@ -216,6 +216,18 @@
 
 ## 2026-11-01
 
+### 🐛 Bug Fixes
+
+- *(deps)* Pin transitive packages past open dependabot advisories
+
 ### 🧰 Maintenance & Dependencies
 
 - *(deps)* Bump the npm-minor-patch group in /app with 5 updates
+- *(deps)* Bump the npm-minor-patch group
+
+## 2026-11-08
+
+### 🧰 Maintenance & Dependencies
+
+- *(deps)* Bump the npm-minor-patch group in /app with 11 updates
+- *(deps)* Bump @pulumi/pulumi
