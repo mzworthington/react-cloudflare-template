@@ -231,3 +231,11 @@
 
 - *(deps)* Bump the npm-minor-patch group in /app with 11 updates
 - *(deps)* Bump @pulumi/pulumi
+
+## 2026-11-15
+
+### 🧰 Maintenance & Dependencies
+
+- *(deps)* Bump the npm-minor-patch group in /app with 12 updates
+- *(deps)* Bump the npm-minor-patch group
+- *(deps-dev)* Bump jsdom from 30.1.3 to 31.0.0 in /app
