@@ -132,3 +132,11 @@ describe('init-project pulumi identity', () => {
     expect(hosting).not.toContain('a60606cf6d3627b9100e2b430dbe0870');
   });
 });
+
+describe('template Pages deploy', () => {
+  it('uses the account secret when hosting.yaml still has the placeholder', () => {
+    const workflow = readFileSync(join(repoRoot, '.github/workflows/ci.yml'), 'utf8');
+    expect(workflow).toContain('YOUR_*');
+    expect(workflow).toContain('secrets.CLOUDFLARE_ACCOUNT_ID');
+  });
+});
