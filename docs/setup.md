@@ -49,8 +49,15 @@ pnpm record:docs-media   # Playwright screenshots for the README
 
 1. Create a Cloudflare API token (Pages Edit + Zone DNS Edit if using a custom domain).
 2. Follow **[Custom domains](./custom-domains.md)** for hostname layouts (subdomains on an existing zone), `.env`, bootstrap, and verify steps.
-3. Secrets/var names: [cloudflare-secrets.md](./cloudflare-secrets.md).
-4. Apply infra: `cd infra/cloudflare && pulumi up` (or merge to `main` for CI).
+3. Secrets/var names: [cloudflare-secrets.md](./cloudflare-secrets.md). For `*.pages.dev` only:
+
+   ```bash
+   bin/set-github-deploy-secrets.sh
+   ```
+
+   The script uses `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `PULUMI_PAGES_PROJECT_NAME` from the environment, and prompts for any that are unset.
+
+4. Apply infra: `cd infra/cloudflare && pulumi up` (or merge to `main` for CI). Skip this when you are not attaching a custom domain.
 5. Push to `main`; CI builds and runs `wrangler pages deploy`.
 
 Without a custom domain, the site is available at `https://<PAGES_PROJECT_NAME>.pages.dev` after the first deploy.

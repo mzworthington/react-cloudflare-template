@@ -139,6 +139,16 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    Hostnames and tokens stay out of the template; use local `.env` or GitHub vars.
    Full walkthrough: [docs/custom-domains.md](docs/custom-domains.md).
 
+   For `*.pages.dev` without a custom domain, set the deploy secrets only:
+
+   ```bash
+   bin/set-github-deploy-secrets.sh
+   ```
+
+   It reads `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `PULUMI_PAGES_PROJECT_NAME` from the environment and prompts for any name that is missing.
+
+   For a custom domain, bootstrap hosting (token, zone, Pulumi):
+
    ```bash
    cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, CLOUDFLARE_API_TOKEN, …
    # Optional Bitwarden: export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
@@ -161,6 +171,7 @@ Full detail: [docs/setup.md](docs/setup.md) · [docs/custom-domains.md](docs/cus
 | ------------------------------------ | ------------------------------------------- |
 | `scripts/create.sh` (curl \| bash)   | Create GitHub repo from template + brand    |
 | `bin/init-project.sh`                | Customize slug, brand, description, origin  |
+| `bin/set-github-deploy-secrets.sh`   | Set Pages deploy secrets/vars on GitHub     |
 | `cd app && pnpm dev`                 | Dev server                                  |
 | `cd app && pnpm knip`                | Unused files / exports / deps               |
 | `cd app && pnpm test` / `pnpm build` | Unit tests / production build               |
