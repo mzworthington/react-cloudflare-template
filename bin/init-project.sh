@@ -286,10 +286,11 @@ replace_in_file infra/cloudflare/Pulumi.yaml "name: $FROM_SLUG" "name: $SLUG"
 replace_in_file infra/cloudflare/hosting.yaml "pagesProjectName: $FROM_SLUG" "pagesProjectName: $SLUG"
 replace_in_file infra/cloudflare/Pulumi.prod.yaml.example "${FROM_SLUG}:" "${SLUG}:"
 
-# The template may be deployed with a real account and zone. A new repo must
-# not inherit those ids; the operator fills them for the new site.
-python3 - <<'PY'
-import pathlib, re
+# The template site is deployed with a real account, zone, and hostname.
+# A new repo must not keep those; the operator fills them for the new site.
+python3 - "$FROM_SLUG" <<'PY'
+import pathlib, re, sys
+from_slug = sys.argv[1]
 path = pathlib.Path("infra/cloudflare/hosting.yaml")
 if not path.is_file():
     raise SystemExit(0)
@@ -303,6 +304,14 @@ def set_key(source: str, key: str, value: str) -> str:
     suffix = "" if source.endswith("\n") else "\n"
     return f"{source}{suffix}{line}\n"
 
+template_host = f"{from_slug}.mzworthington.co.uk"
+text = re.sub(
+    rf"^  - {re.escape(template_host)}$",
+    "  - app.example.com",
+    text,
+    count=1,
+    flags=re.M,
+)
 text = set_key(text, "accountId", "YOUR_CLOUDFLARE_ACCOUNT_ID")
 text = set_key(text, "zoneId", "YOUR_CLOUDFLARE_ZONE_ID")
 path.write_text(text if text.endswith("\n") else text + "\n")
@@ -432,7 +441,8 @@ echo "Next:"
 echo "  1. bin/setup-dev-env.sh"
 echo "  2. cd app && pnpm dev"
 echo "  3. Fill in README.md placeholders; review app/src/siteConfig.ts"
-echo "  4. When ready for hosting:"
+echo "  4. When ready for hosting, set accountId, zoneId, and pagesHostnames"
+echo "     in infra/cloudflare/hosting.yaml (init cleared the template values):"
 echo "       cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, tokens"
 echo "       bin/setup-cloudflare-hosting.sh"
 echo "       # Or: DOMAIN=example.com PAGES_HOSTNAMES=app.example.com \\"

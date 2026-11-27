@@ -136,7 +136,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    ```
 
 3. **Bootstrap Cloudflare** (API token with Pages Edit; Zone DNS Edit if using a custom domain).
-   Hostnames and tokens stay out of the template; use local `.env` or GitHub vars.
+   `bin/init-project.sh` clears this template’s account id, zone id, and hostname. Put the new site’s ids and hostnames in `infra/cloudflare/hosting.yaml`. Tokens stay in `.env` or GitHub secrets.
    Full walkthrough: [docs/custom-domains.md](docs/custom-domains.md).
 
    For `*.pages.dev` without a custom domain, set the deploy secrets only:

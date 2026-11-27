@@ -1,6 +1,6 @@
 {
   "disabled": false,
   "lastTestOutcome": "pass",
-  "lastTestCommand": "pnpm exec vitest run src/test/set-github-deploy-secrets.test.ts",
-  "lastTestAt": "2026-11-27T13:04:01.398Z"
+  "lastTestCommand": "pnpm exec prettier --config ../.prettierrc --ignore-path ../.prettierignore --write ../docs/custom-domains.md ../README.md ../infra/cloudflare/hosting.yaml && pnpm exec vitest run src/test/init-project-pulumi.test.ts src/test/set-github-deploy-secrets.test.ts",
+  "lastTestAt": "2026-11-27T14:22:14.914Z"
 }

@@ -100,7 +100,7 @@ describe('init-project pulumi identity', () => {
       [
         'pagesProjectName: react-cloudflare-template',
         'pagesHostnames:',
-        '  - app.example.com',
+        '  - react-cloudflare-template.mzworthington.co.uk',
         'enableWebAnalytics: false',
         'accountId: fe0bb0a89551958509fe4d65883026cc',
         'zoneId: a60606cf6d3627b9100e2b430dbe0870',
@@ -128,8 +128,10 @@ describe('init-project pulumi identity', () => {
     const hosting = readFileSync(join(root, 'infra/cloudflare/hosting.yaml'), 'utf8');
     expect(hosting).toContain('accountId: YOUR_CLOUDFLARE_ACCOUNT_ID');
     expect(hosting).toContain('zoneId: YOUR_CLOUDFLARE_ZONE_ID');
+    expect(hosting).toContain('  - app.example.com');
     expect(hosting).not.toContain('fe0bb0a89551958509fe4d65883026cc');
     expect(hosting).not.toContain('a60606cf6d3627b9100e2b430dbe0870');
+    expect(hosting).not.toContain('react-cloudflare-template.mzworthington.co.uk');
   });
 });
 
