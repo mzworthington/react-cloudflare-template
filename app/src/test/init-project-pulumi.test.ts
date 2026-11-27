@@ -134,9 +134,10 @@ describe('init-project pulumi identity', () => {
 });
 
 describe('template Pages deploy', () => {
-  it('uses the account secret when hosting.yaml still has the placeholder', () => {
+  it('reads the account id from hosting.yaml', () => {
     const workflow = readFileSync(join(repoRoot, '.github/workflows/ci.yml'), 'utf8');
-    expect(workflow).toContain('YOUR_*');
-    expect(workflow).toContain('secrets.CLOUDFLARE_ACCOUNT_ID');
+    expect(workflow).toContain('infra/cloudflare/hosting.yaml');
+    expect(workflow).not.toContain('secrets.CLOUDFLARE_ACCOUNT_ID');
+    expect(workflow).not.toContain('secrets.CLOUDFLARE_ZONE_ID');
   });
 });

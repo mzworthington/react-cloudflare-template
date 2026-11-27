@@ -117,15 +117,10 @@ jobs:
 
       - name: Read Cloudflare account
         id: cloudflare-account
-        env:
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           id=$(awk -F': *' '$1 == "accountId" { print $2; exit }' infra/cloudflare/hosting.yaml)
           if [[ -z "$id" || "$id" == YOUR_* ]]; then
-            id="${CLOUDFLARE_ACCOUNT_ID}"
-          fi
-          if [[ -z "$id" ]]; then
-            echo "::error::Set accountId in infra/cloudflare/hosting.yaml or CLOUDFLARE_ACCOUNT_ID."
+            echo "::error::Set accountId in infra/cloudflare/hosting.yaml."
             exit 1
           fi
           echo "id=${id}" >> "$GITHUB_OUTPUT"

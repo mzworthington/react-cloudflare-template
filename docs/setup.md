@@ -55,7 +55,7 @@ pnpm record:docs-media   # Playwright screenshots for the README
    bin/set-github-deploy-secrets.sh
    ```
 
-   The script uses `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, and `PULUMI_ACCESS_TOKEN` from the environment, and prompts for any that are unset.
+   The script uses `CLOUDFLARE_API_TOKEN` and `PULUMI_ACCESS_TOKEN` from the environment, and prompts for any that are unset. The account and zone ids are committed in `infra/cloudflare/hosting.yaml`.
 
 4. Apply infra: `cd infra/cloudflare && pulumi up` (or merge to `main` for CI). Skip this when you are not attaching a custom domain.
 5. Push to `main`; CI builds and runs `wrangler pages deploy`.

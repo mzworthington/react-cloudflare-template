@@ -44,20 +44,14 @@ describe('set-github-deploy-secrets', () => {
         PATH: `${ghDir}:${process.env.PATH ?? ''}`,
         DEPLOY_SECRETS_DOTENV: '/dev/null',
         CLOUDFLARE_API_TOKEN: 'cf-token',
-        CLOUDFLARE_ACCOUNT_ID: 'cf-account',
-        CLOUDFLARE_ZONE_ID: 'cf-zone',
         PULUMI_ACCESS_TOKEN: 'pulumi-token',
       },
     });
 
     expect(readFileSync(logPath, 'utf8')).toBe(
-      [
-        'secret CLOUDFLARE_API_TOKEN cf-token',
-        'secret CLOUDFLARE_ACCOUNT_ID cf-account',
-        'secret CLOUDFLARE_ZONE_ID cf-zone',
-        'secret PULUMI_ACCESS_TOKEN pulumi-token',
-        '',
-      ].join('\n'),
+      ['secret CLOUDFLARE_API_TOKEN cf-token', 'secret PULUMI_ACCESS_TOKEN pulumi-token', ''].join(
+        '\n',
+      ),
     );
   });
 
@@ -67,7 +61,7 @@ describe('set-github-deploy-secrets', () => {
     const ghDir = fakeGhDir(logPath);
 
     execFileSync('bash', [script], {
-      input: 'prompt-token\nprompt-account\nprompt-zone\nprompt-pulumi\n',
+      input: 'prompt-token\nprompt-pulumi\n',
       env: {
         PATH: `${ghDir}:${process.env.PATH ?? ''}`,
         DEPLOY_SECRETS_DOTENV: '/dev/null',
@@ -77,8 +71,6 @@ describe('set-github-deploy-secrets', () => {
     expect(readFileSync(logPath, 'utf8')).toBe(
       [
         'secret CLOUDFLARE_API_TOKEN prompt-token',
-        'secret CLOUDFLARE_ACCOUNT_ID prompt-account',
-        'secret CLOUDFLARE_ZONE_ID prompt-zone',
         'secret PULUMI_ACCESS_TOKEN prompt-pulumi',
         '',
       ].join('\n'),

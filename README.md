@@ -145,7 +145,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    bin/set-github-deploy-secrets.sh
    ```
 
-   It reads `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, and `PULUMI_ACCESS_TOKEN` from the environment and prompts for any secret that is missing. The Pages project name stays in `wrangler.toml` and `infra/cloudflare/hosting.yaml`.
+   It reads `CLOUDFLARE_API_TOKEN` and `PULUMI_ACCESS_TOKEN` from the environment and prompts for any secret that is missing. The account id, zone id, and Pages project name stay in `infra/cloudflare/hosting.yaml` and `wrangler.toml`.
 
    For a custom domain, bootstrap hosting (token, zone, Pulumi):
 

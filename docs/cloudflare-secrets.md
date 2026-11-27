@@ -2,18 +2,16 @@
 
 Companion to **[Custom domains](./custom-domains.md)**. Shared CI/bootstrap tooling lives in [edge-dns](https://github.com/mzworthington/edge-dns) ([reusable Cloudflare CI](https://github.com/mzworthington/edge-dns/blob/main/docs/reusable-cloudflare-ci.md)). This repo keeps thin shims only.
 
-API tokens, the Pulumi access token, the account id, and the zone id belong in **Bitwarden**, **GitHub Actions secrets**, or a local `.env`. The Pages project name and hostnames are committed in `infra/cloudflare/hosting.yaml`. Wrangler reads the project name from `wrangler.toml`.
+The API token and the Pulumi access token belong in **Bitwarden**, **GitHub Actions secrets**, or a local `.env`. The account id, zone id, Pages project name, and hostnames are committed in `infra/cloudflare/hosting.yaml`. Wrangler reads the project name from `wrangler.toml`.
 
 ## Pages deploy
 
 A push to `main` deploys with Wrangler. Pulumi on `main` also requires the zone id and a Pulumi access token:
 
-| Key                     | Kind   | Used by               |
-| ----------------------- | ------ | --------------------- |
-| `CLOUDFLARE_API_TOKEN`  | secret | Wrangler Pages deploy |
-| `CLOUDFLARE_ACCOUNT_ID` | secret | Wrangler Pages deploy |
-| `CLOUDFLARE_ZONE_ID`    | secret | Pulumi DNS / domains  |
-| `PULUMI_ACCESS_TOKEN`   | secret | Pulumi workflow       |
+| Key                    | Kind   | Used by               |
+| ---------------------- | ------ | --------------------- |
+| `CLOUDFLARE_API_TOKEN` | secret | Wrangler Pages deploy |
+| `PULUMI_ACCESS_TOKEN`  | secret | Pulumi workflow       |
 
 ```bash
 bin/set-github-deploy-secrets.sh
@@ -52,13 +50,11 @@ The **zone** (`DOMAIN`) must already be active on Cloudflare (managed in edge-dn
 
 ## Secrets / vars
 
-| Key                     | Kind   | Used by                                         |
-| ----------------------- | ------ | ----------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN`  | secret | Wrangler + Pulumi                               |
-| `CLOUDFLARE_ACCOUNT_ID` | secret | Wrangler + Pulumi                               |
-| `CLOUDFLARE_ZONE_ID`    | secret | Pulumi DNS / domains                            |
-| `PULUMI_ACCESS_TOKEN`   | secret | Pulumi workflow                                 |
-| `POSTHOG_TOKEN`         | secret | Pages build on `main` (PostHog project API key) |
+| Key                    | Kind   | Used by                                         |
+| ---------------------- | ------ | ----------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN` | secret | Wrangler + Pulumi                               |
+| `PULUMI_ACCESS_TOKEN`  | secret | Pulumi workflow                                 |
+| `POSTHOG_TOKEN`        | secret | Pages build on `main` (PostHog project API key) |
 
 Prefer a **dedicated BWS project** per site. Bootstrap always resolves the zone from `DOMAIN`.
 
