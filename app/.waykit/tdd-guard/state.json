@@ -2,5 +2,5 @@
   "disabled": false,
   "lastTestOutcome": "pass",
   "lastTestCommand": "pnpm exec vitest run src/test/set-github-deploy-secrets.test.ts",
-  "lastTestAt": "2026-11-27T12:52:21.711Z"
+  "lastTestAt": "2026-11-27T13:04:01.398Z"
 }

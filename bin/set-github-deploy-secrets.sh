@@ -46,10 +46,14 @@ ensure_value() {
 
 ensure_value CLOUDFLARE_API_TOKEN secret
 ensure_value CLOUDFLARE_ACCOUNT_ID secret
+ensure_value CLOUDFLARE_ZONE_ID secret
+ensure_value PULUMI_ACCESS_TOKEN secret
 ensure_value PULUMI_PAGES_PROJECT_NAME plain
 
 echo "→ Setting GitHub deploy secrets"
 printf '%s' "$CLOUDFLARE_API_TOKEN" | gh secret set CLOUDFLARE_API_TOKEN
 printf '%s' "$CLOUDFLARE_ACCOUNT_ID" | gh secret set CLOUDFLARE_ACCOUNT_ID
+printf '%s' "$CLOUDFLARE_ZONE_ID" | gh secret set CLOUDFLARE_ZONE_ID
+printf '%s' "$PULUMI_ACCESS_TOKEN" | gh secret set PULUMI_ACCESS_TOKEN
 gh variable set PULUMI_PAGES_PROJECT_NAME --body "$PULUMI_PAGES_PROJECT_NAME"
-echo "✓ CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, and PULUMI_PAGES_PROJECT_NAME are set"
+echo "✓ Cloudflare and Pulumi deploy secrets are set"

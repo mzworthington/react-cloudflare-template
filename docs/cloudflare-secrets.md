@@ -6,12 +6,14 @@ Real account IDs, zone IDs, API tokens, and hostnames belong in **Bitwarden**, *
 
 ## Pages deploy
 
-A push to `main` deploys with Wrangler. That job reads two secrets and one variable:
+A push to `main` deploys with Wrangler. Pulumi on `main` also requires the zone id and a Pulumi access token:
 
 | Key                         | Kind     | Used by                            |
 | --------------------------- | -------- | ---------------------------------- |
 | `CLOUDFLARE_API_TOKEN`      | secret   | Wrangler Pages deploy              |
 | `CLOUDFLARE_ACCOUNT_ID`     | secret   | Wrangler Pages deploy              |
+| `CLOUDFLARE_ZONE_ID`        | secret   | Pulumi DNS / domains               |
+| `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow                    |
 | `PULUMI_PAGES_PROJECT_NAME` | variable | Pages project name (`*.pages.dev`) |
 
 ```bash
@@ -20,7 +22,7 @@ bin/set-github-deploy-secrets.sh
 
 Run it from the product clone, with `gh` authenticated for that repo. Each name is taken from the environment when it is already set. Missing names are prompted (secret input is hidden). Without a custom domain, the next push to `main` publishes `https://<PULUMI_PAGES_PROJECT_NAME>.pages.dev`.
 
-Custom domains, the zone id, and the Pulumi token still go through the bootstrap below.
+Custom domain hostnames still go through the bootstrap below.
 
 ## Bootstrap
 

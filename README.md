@@ -145,7 +145,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    bin/set-github-deploy-secrets.sh
    ```
 
-   It reads `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, and `PULUMI_PAGES_PROJECT_NAME` from the environment and prompts for any name that is missing.
+   It reads `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `CLOUDFLARE_ZONE_ID`, `PULUMI_ACCESS_TOKEN`, and `PULUMI_PAGES_PROJECT_NAME` from the environment and prompts for any name that is missing.
 
    For a custom domain, bootstrap hosting (token, zone, Pulumi):
 
