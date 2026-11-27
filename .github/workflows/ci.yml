@@ -115,9 +115,15 @@ jobs:
           name: dist
           path: app/dist
 
+      - name: Read Cloudflare account
+        id: cloudflare-account
+        run: |
+          id=$(awk -F': *' '$1 == "accountId" { print $2; exit }' infra/cloudflare/hosting.yaml)
+          echo "id=${id}" >> "$GITHUB_OUTPUT"
+
       - name: Deploy to Cloudflare Pages
         uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          accountId: ${{ steps.cloudflare-account.outputs.id }}
           command: pages deploy app/dist

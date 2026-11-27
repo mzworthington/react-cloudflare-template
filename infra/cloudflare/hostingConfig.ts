@@ -2,13 +2,17 @@ export interface HostingConfig {
   pagesProjectName: string;
   pagesHostnames: string[];
   enableWebAnalytics: boolean;
+  accountId: string;
+  zoneId: string;
 }
 
-/** Pages project name and hostnames. Secrets stay in the Pulumi stack config. */
+/** Pages identity plus the Cloudflare account and zone. Tokens stay in the secret store. */
 export function loadHostingConfig(source: string): HostingConfig {
   let pagesProjectName = '';
   const pagesHostnames: string[] = [];
   let enableWebAnalytics: boolean | undefined;
+  let accountId = '';
+  let zoneId = '';
   let inHostnames = false;
 
   for (const raw of source.split(/\r?\n/)) {
@@ -31,6 +35,10 @@ export function loadHostingConfig(source: string): HostingConfig {
     const value = unquote(line.slice(sep + 1).trim());
     if (key === 'pagesProjectName') {
       pagesProjectName = value;
+    } else if (key === 'accountId') {
+      accountId = value;
+    } else if (key === 'zoneId') {
+      zoneId = value;
     } else if (key === 'enableWebAnalytics') {
       if (value !== 'true' && value !== 'false') {
         throw new Error('enableWebAnalytics must be true or false');
@@ -46,8 +54,10 @@ export function loadHostingConfig(source: string): HostingConfig {
   if (enableWebAnalytics === undefined) {
     throw new Error('hosting.yaml enableWebAnalytics is required');
   }
+  if (accountId === '') throw new Error('hosting.yaml accountId is required');
+  if (zoneId === '') throw new Error('hosting.yaml zoneId is required');
 
-  return { pagesProjectName, pagesHostnames, enableWebAnalytics };
+  return { pagesProjectName, pagesHostnames, enableWebAnalytics, accountId, zoneId };
 }
 
 function unquote(value: string): string {

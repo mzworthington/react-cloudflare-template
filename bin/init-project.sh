@@ -286,6 +286,28 @@ replace_in_file infra/cloudflare/Pulumi.yaml "name: $FROM_SLUG" "name: $SLUG"
 replace_in_file infra/cloudflare/hosting.yaml "pagesProjectName: $FROM_SLUG" "pagesProjectName: $SLUG"
 replace_in_file infra/cloudflare/Pulumi.prod.yaml.example "${FROM_SLUG}:" "${SLUG}:"
 
+# The template may be deployed with a real account and zone. A new repo must
+# not inherit those ids; the operator fills them for the new site.
+python3 - <<'PY'
+import pathlib, re
+path = pathlib.Path("infra/cloudflare/hosting.yaml")
+if not path.is_file():
+    raise SystemExit(0)
+text = path.read_text()
+
+def set_key(source: str, key: str, value: str) -> str:
+    line = f"{key}: {value}"
+    pattern = rf"^{re.escape(key)}:.*$"
+    if re.search(pattern, source, flags=re.M):
+        return re.sub(pattern, line, source, count=1, flags=re.M)
+    suffix = "" if source.endswith("\n") else "\n"
+    return f"{source}{suffix}{line}\n"
+
+text = set_key(text, "accountId", "YOUR_CLOUDFLARE_ACCOUNT_ID")
+text = set_key(text, "zoneId", "YOUR_CLOUDFLARE_ZONE_ID")
+path.write_text(text if text.endswith("\n") else text + "\n")
+PY
+
 # Static HTML head (build shell; SPA also uses siteConfig at runtime for brand)
 python3 - "$NAME" "$DESCRIPTION" "$ORIGIN" <<'PY'
 import pathlib, re, sys

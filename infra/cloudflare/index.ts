@@ -2,14 +2,12 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 
 import * as cloudflare from '@pulumi/cloudflare';
-import * as pulumi from '@pulumi/pulumi';
 
 import { loadHostingConfig } from './hostingConfig';
 
-const config = new pulumi.Config();
-const accountId = config.require('accountId');
-const zoneId = config.require('zoneId');
 const hosting = loadHostingConfig(readFileSync(join(__dirname, 'hosting.yaml'), 'utf8'));
+const accountId = hosting.accountId;
+const zoneId = hosting.zoneId;
 const pagesProjectName = hosting.pagesProjectName;
 /** Zone RUM is shared; only enable when this stack owns the zone's analytics site. */
 const enableWebAnalytics = hosting.enableWebAnalytics;

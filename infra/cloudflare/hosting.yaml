@@ -2,3 +2,7 @@ pagesProjectName: react-cloudflare-template
 pagesHostnames:
   - app.example.com
 enableWebAnalytics: false
+# Placeholders on purpose. init-project rewrites these so a new repo does not
+# inherit this template's account or zone, even after this repo is deployed.
+accountId: YOUR_CLOUDFLARE_ACCOUNT_ID
+zoneId: YOUR_CLOUDFLARE_ZONE_ID
