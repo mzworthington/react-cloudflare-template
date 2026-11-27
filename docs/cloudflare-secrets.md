@@ -2,25 +2,24 @@
 
 Companion to **[Custom domains](./custom-domains.md)**. Shared CI/bootstrap tooling lives in [edge-dns](https://github.com/mzworthington/edge-dns) ([reusable Cloudflare CI](https://github.com/mzworthington/edge-dns/blob/main/docs/reusable-cloudflare-ci.md)). This repo keeps thin shims only.
 
-Real account IDs, zone IDs, API tokens, and hostnames belong in **Bitwarden**, **GitHub Actions secrets/vars**, or a local `.env` — never in committed template sources.
+API tokens, the Pulumi access token, the account id, and the zone id belong in **Bitwarden**, **GitHub Actions secrets**, or a local `.env`. The Pages project name and hostnames are committed in `infra/cloudflare/hosting.yaml`. Wrangler reads the project name from `wrangler.toml`.
 
 ## Pages deploy
 
 A push to `main` deploys with Wrangler. Pulumi on `main` also requires the zone id and a Pulumi access token:
 
-| Key                         | Kind     | Used by                            |
-| --------------------------- | -------- | ---------------------------------- |
-| `CLOUDFLARE_API_TOKEN`      | secret   | Wrangler Pages deploy              |
-| `CLOUDFLARE_ACCOUNT_ID`     | secret   | Wrangler Pages deploy              |
-| `CLOUDFLARE_ZONE_ID`        | secret   | Pulumi DNS / domains               |
-| `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow                    |
-| `PULUMI_PAGES_PROJECT_NAME` | variable | Pages project name (`*.pages.dev`) |
+| Key                     | Kind   | Used by               |
+| ----------------------- | ------ | --------------------- |
+| `CLOUDFLARE_API_TOKEN`  | secret | Wrangler Pages deploy |
+| `CLOUDFLARE_ACCOUNT_ID` | secret | Wrangler Pages deploy |
+| `CLOUDFLARE_ZONE_ID`    | secret | Pulumi DNS / domains  |
+| `PULUMI_ACCESS_TOKEN`   | secret | Pulumi workflow       |
 
 ```bash
 bin/set-github-deploy-secrets.sh
 ```
 
-Run it from the product clone, with `gh` authenticated for that repo. Each name is taken from the environment when it is already set. Missing names are prompted (secret input is hidden). Without a custom domain, the next push to `main` publishes `https://<PULUMI_PAGES_PROJECT_NAME>.pages.dev`.
+Run it from the product clone, with `gh` authenticated for that repo. Each secret is taken from the environment when it is already set. Missing secrets are prompted (input is hidden). The next push to `main` publishes `https://<name in wrangler.toml>.pages.dev`.
 
 Custom domain hostnames still go through the bootstrap below.
 
@@ -53,15 +52,13 @@ The **zone** (`DOMAIN`) must already be active on Cloudflare (managed in edge-dn
 
 ## Secrets / vars
 
-| Key                         | Kind     | Used by                                         |
-| --------------------------- | -------- | ----------------------------------------------- |
-| `CLOUDFLARE_API_TOKEN`      | secret   | Wrangler + Pulumi                               |
-| `CLOUDFLARE_ACCOUNT_ID`     | secret   | Wrangler + Pulumi                               |
-| `CLOUDFLARE_ZONE_ID`        | secret   | Pulumi DNS / domains                            |
-| `PULUMI_ACCESS_TOKEN`       | secret   | Pulumi workflow                                 |
-| `PULUMI_PAGES_PROJECT_NAME` | variable | Deploy + Pulumi                                 |
-| `PULUMI_PAGES_HOSTNAMES`    | variable | Pulumi (JSON array)                             |
-| `POSTHOG_TOKEN`             | secret   | Pages build on `main` (PostHog project API key) |
+| Key                     | Kind   | Used by                                         |
+| ----------------------- | ------ | ----------------------------------------------- |
+| `CLOUDFLARE_API_TOKEN`  | secret | Wrangler + Pulumi                               |
+| `CLOUDFLARE_ACCOUNT_ID` | secret | Wrangler + Pulumi                               |
+| `CLOUDFLARE_ZONE_ID`    | secret | Pulumi DNS / domains                            |
+| `PULUMI_ACCESS_TOKEN`   | secret | Pulumi workflow                                 |
+| `POSTHOG_TOKEN`         | secret | Pages build on `main` (PostHog project API key) |
 
 Prefer a **dedicated BWS project** per site. Bootstrap always resolves the zone from `DOMAIN`.
 

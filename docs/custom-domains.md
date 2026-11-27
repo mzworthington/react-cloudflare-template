@@ -79,7 +79,7 @@ bin/setup-cloudflare-hosting.sh
 The script:
 
 - Resolves account/zone IDs if missing (zone must already be active)
-- Writes **GitHub** secrets/vars (`CLOUDFLARE_*`, `PULUMI_*`, `PULUMI_PAGES_HOSTNAMES`)
+- Writes **GitHub** secrets (`CLOUDFLARE_*`, `PULUMI_ACCESS_TOKEN`). Pages name and hostnames stay in `hosting.yaml`.
 - Writes **gitignored** `infra/cloudflare/Pulumi.<stack>.yaml`
 
 ### 4. Apply infrastructure
@@ -108,12 +108,12 @@ Push to `main` (or wait for the next CI run). Wrangler uploads `app/dist`.
 
 ## Where configuration lives
 
-| Concern                       | Local                                         | CI                                                                           |
-| ----------------------------- | --------------------------------------------- | ---------------------------------------------------------------------------- |
-| API token, account, zone      | `.env` / Bitwarden                            | GitHub **secrets**                                                           |
-| Project name + hostnames      | `.env`                                        | GitHub **variables** (`PULUMI_PAGES_PROJECT_NAME`, `PULUMI_PAGES_HOSTNAMES`) |
-| Pulumi stack values           | `infra/cloudflare/Pulumi.*.yaml` (gitignored) | Same stack, configured by the setup action from vars/secrets                 |
-| Public site origin in the SPA | `SITE_ORIGIN` via `init-project.sh`           | Built into the app bundle                                                    |
+| Concern                       | Local                                         | CI                                                     |
+| ----------------------------- | --------------------------------------------- | ------------------------------------------------------ |
+| API token, account, zone      | `.env` / Bitwarden                            | GitHub **secrets**                                     |
+| Project name + hostnames      | `infra/cloudflare/hosting.yaml`               | Same committed file                                    |
+| Pulumi stack secrets          | `infra/cloudflare/Pulumi.*.yaml` (gitignored) | Account id, zone id, and API token from GitHub secrets |
+| Public site origin in the SPA | `SITE_ORIGIN` via `init-project.sh`           | Built into the app bundle                              |
 
 ## Troubleshooting
 
@@ -121,7 +121,7 @@ Push to `main` (or wait for the next CI run). Wrangler uploads `app/dist`.
 | --------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Zone missing or not active                          | Add the zone in Cloudflare and wait until it is **Active** before running bootstrap. This template does not configure nameservers.                                                                   |
 | Custom domain pending                               | DNS CNAME exists and is proxied (orange cloud); wait for SSL.                                                                                                                                        |
-| CI Pulumi fails on hostnames                        | Set repo variable `PULUMI_PAGES_HOSTNAMES` to JSON, e.g. `["app.example.com"]`.                                                                                                                      |
+| CI Pulumi fails on hostnames                        | Edit `infra/cloudflare/hosting.yaml` `pagesHostnames`.                                                                                                                                               |
 | Wrong site origin in HTML/meta                      | Re-run `bin/init-project.sh --origin https://… --force` and redeploy.                                                                                                                                |
 | Token denied                                        | Token needs Pages Edit + Zone Read + DNS Edit on the correct account/zone.                                                                                                                           |
 | Wrong zone in Pulumi (`zoneName` is another domain) | Shared BWS had `CLOUDFLARE_ZONE_ID` for a different site. Re-run bootstrap after the fix that resolves zone from `DOMAIN`; update GitHub `CLOUDFLARE_ZONE_ID` secret. Prefer a BWS project per site. |

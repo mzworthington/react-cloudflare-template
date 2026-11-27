@@ -1,21 +1,19 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+
 import * as cloudflare from '@pulumi/cloudflare';
 import * as pulumi from '@pulumi/pulumi';
+
+import { loadHostingConfig } from './hostingConfig';
 
 const config = new pulumi.Config();
 const accountId = config.require('accountId');
 const zoneId = config.require('zoneId');
-const pagesProjectName = config.require('pagesProjectName');
+const hosting = loadHostingConfig(readFileSync(join(__dirname, 'hosting.yaml'), 'utf8'));
+const pagesProjectName = hosting.pagesProjectName;
 /** Zone RUM is shared; only enable when this stack owns the zone's analytics site. */
-const enableWebAnalytics = config.getBoolean('enableWebAnalytics') ?? false;
-
-/** Subdomain hostnames attached to the Pages project (existing zone assumed). */
-function resolvePagesHostnames(): string[] {
-  const listed = config.getObject<string[]>('pagesHostnames');
-  if (listed && listed.length > 0) return listed;
-  throw new Error('Set pagesHostnames to a JSON array of subdomains, e.g. ["app.example.com"]');
-}
-
-const pagesHostnames = resolvePagesHostnames();
+const enableWebAnalytics = hosting.enableWebAnalytics;
+const pagesHostnames = hosting.pagesHostnames;
 
 const pagesProject = new cloudflare.PagesProject('site', {
   accountId,

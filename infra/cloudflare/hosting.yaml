@@ -1,0 +1,4 @@
+pagesProjectName: react-cloudflare-template
+pagesHostnames:
+  - app.example.com
+enableWebAnalytics: false

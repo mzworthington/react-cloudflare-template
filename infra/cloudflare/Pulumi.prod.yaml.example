@@ -1,11 +1,5 @@
 config:
-  # Fill via bin/setup-cloudflare-hosting.sh (writes gitignored Pulumi.<stack>.yaml).
-  # Do not commit real account/zone/hostnames in the template.
+  # Secrets only. bin/setup-cloudflare-hosting.sh writes the gitignored Pulumi.<stack>.yaml.
+  # Pages project name and hostnames are committed in hosting.yaml.
   react-cloudflare-template:accountId: YOUR_CLOUDFLARE_ACCOUNT_ID
   react-cloudflare-template:zoneId: YOUR_CLOUDFLARE_ZONE_ID
-  react-cloudflare-template:pagesProjectName: my-app
-  # Subdomains on an existing active zone:
-  react-cloudflare-template:pagesHostnames:
-    - app.example.com
-  # true only when this stack owns the zone Web Analytics site (not a shared apex)
-  react-cloudflare-template:enableWebAnalytics: false

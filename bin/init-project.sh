@@ -279,11 +279,12 @@ for rel, name in (
     path.write_text(json.dumps(data, indent=2) + "\n")
 PY
 
-# Wrangler + CI fallback Pages project name
+# Wrangler Pages project name. Pulumi project name must change too, or this
+# clone selects the template stack in Pulumi Cloud.
 replace_in_file wrangler.toml "name = \"$FROM_SLUG\"" "name = \"$SLUG\""
-replace_in_file .github/workflows/ci.yml \
-  "vars.PULUMI_PAGES_PROJECT_NAME || '$FROM_SLUG'" \
-  "vars.PULUMI_PAGES_PROJECT_NAME || '$SLUG'"
+replace_in_file infra/cloudflare/Pulumi.yaml "name: $FROM_SLUG" "name: $SLUG"
+replace_in_file infra/cloudflare/hosting.yaml "pagesProjectName: $FROM_SLUG" "pagesProjectName: $SLUG"
+replace_in_file infra/cloudflare/Pulumi.prod.yaml.example "${FROM_SLUG}:" "${SLUG}:"
 
 # Static HTML head (build shell; SPA also uses siteConfig at runtime for brand)
 python3 - "$NAME" "$DESCRIPTION" "$ORIGIN" <<'PY'
