@@ -35,7 +35,8 @@ describe('HomePage', () => {
   it('shows a hosting bootstrap teaser linked to custom-domains docs', () => {
     render(<HomePage />);
     const snippet = screen.getByTestId('hosting-snippet');
-    expect(snippet.textContent).toContain('bin/setup-cloudflare-hosting.sh');
+    expect(snippet.textContent).toContain('setup-cloudflare-hosting');
+    expect(snippet.textContent).not.toContain('bin/setup-cloudflare-hosting.sh');
     expect(snippet.textContent).toContain('.env.example');
     const link = screen.getByRole('link', { name: /custom domains/i });
     expect(link.getAttribute('href')).toBe('/docs/custom-domains');

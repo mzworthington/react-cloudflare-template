@@ -258,7 +258,7 @@ export const SITE_CREATE_COMMAND = `curl -fsSL https://raw.githubusercontent.com
 export function hostingBootstrapSnippet(): string {{
   return [
     'cp .env.example .env   # DOMAIN, PAGES_HOSTNAMES, BWS_* or token',
-    'bin/setup-cloudflare-hosting.sh',
+    'setup-cloudflare-hosting',
   ].join('\\n');
 }}
 """
@@ -444,9 +444,9 @@ echo "  3. Fill in README.md placeholders; review app/src/siteConfig.ts"
 echo "  4. When ready for hosting, set accountId, zoneId, and pagesHostnames"
 echo "     in infra/cloudflare/hosting.yaml (init cleared the template values):"
 echo "       cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, tokens"
-echo "       bin/setup-cloudflare-hosting.sh"
+echo "       setup-cloudflare-hosting"
 echo "       # Or: DOMAIN=example.com PAGES_HOSTNAMES=app.example.com \\"
-echo "       #     PAGES_PROJECT_NAME=$SLUG PULUMI_STACK=prod bin/setup-cloudflare-hosting.sh"
+echo "       #     PAGES_PROJECT_NAME=$SLUG PULUMI_STACK=prod setup-cloudflare-hosting"
 echo
 echo "Tip: commit the customization as its own change before feature work."
 echo "Note: scripts/create.sh stays only on the template repo; it is removed here."

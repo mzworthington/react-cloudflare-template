@@ -152,7 +152,7 @@ Vite gives you a blank app. This template is the baseline so day one is product 
    ```bash
    cp .env.example .env   # set DOMAIN, PAGES_HOSTNAMES, CLOUDFLARE_API_TOKEN, …
    # Optional Bitwarden: export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
-   bin/setup-cloudflare-hosting.sh
+   setup-cloudflare-hosting
    ```
 
 4. **Apply infra**: `cd infra/cloudflare && pulumi up`, or merge to `main` and approve the **pulumi-prod** GitHub Environment.

@@ -73,7 +73,7 @@ CLOUDFLARE_API_TOKEN=...   # or use Bitwarden (BWS_*); see secrets doc
 ```bash
 gh auth login
 pulumi login
-bin/setup-cloudflare-hosting.sh
+setup-cloudflare-hosting
 ```
 
 The script:

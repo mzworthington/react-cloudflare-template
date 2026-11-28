@@ -27,7 +27,7 @@ pulumi import 'cloudflare:index/observatoryScheduledTest:ObservatoryScheduledTes
 export BWS_ACCESS_TOKEN=... BWS_PROJECT_ID=...
 export DOMAIN=example.com PAGES_HOSTNAMES=app.example.com
 export PAGES_PROJECT_NAME=my-app PULUMI_STACK=prod
-../../bin/setup-cloudflare-hosting.sh
+setup-cloudflare-hosting
 pulumi up
 ```
 
@@ -40,4 +40,4 @@ Or merge to `main`. `.github/workflows/pulumi-cloudflare.yml` is a thin caller o
 | `wrangler.toml`            | Pages project name + `app/dist` output    |
 | `app/public/_redirects`    | SPA routing                               |
 | `.github/workflows/ci.yml` | Build + wrangler deploy                   |
-| `bin/setup-cloudflare-hosting.sh` | Thin shim → edge-dns bootstrap     |
+| `setup-cloudflare-hosting` | edge-dns command on PATH |

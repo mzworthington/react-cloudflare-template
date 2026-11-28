@@ -23,6 +23,6 @@ export const SITE_CREATE_COMMAND = `curl -fsSL https://raw.githubusercontent.com
 export function hostingBootstrapSnippet(): string {
   return [
     'cp .env.example .env   # DOMAIN, PAGES_HOSTNAMES, BWS_* or token',
-    'bin/setup-cloudflare-hosting.sh',
+    'setup-cloudflare-hosting',
   ].join('\n');
 }
