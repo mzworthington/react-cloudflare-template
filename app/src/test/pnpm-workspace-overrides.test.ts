@@ -28,6 +28,13 @@ describe('pnpm workspace security overrides', () => {
     expect(lockfile).not.toMatch(/^ {2}source-map-js@1\.2\.1:/m);
   });
 
+  it('replaces glob 13 and minimatch 10 with the GHSA-g3hv-75wg-m249 fix', () => {
+    expect(workspaceYaml).toMatch(/^\s+'glob@13':\s*14\.0\.3\s*$/m);
+    expect(workspaceYaml).toMatch(/^\s+'minimatch@10':\s*11\.0\.3\s*$/m);
+    expect(lockfile).not.toMatch(/^ {2}minimatch@10\./m);
+    expect(lockfile).toMatch(/^ {2}minimatch@11\./m);
+  });
+
   it('replaces @puppeteer/browsers so extract-zip leaves the lockfile', () => {
     expect(workspaceYaml).toMatch(/^\s+'@puppeteer\/browsers':\s*3\.2\.2\s*$/m);
     expect(lockfile).toMatch(/^ {2}'@puppeteer\/browsers@3\.2\.2':/m);
